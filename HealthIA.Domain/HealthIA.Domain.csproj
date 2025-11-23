@@ -8,9 +8,7 @@
 
   <ItemGroup>
     <Folder Include="Account\" />
-    <Folder Include="Entities\" />
     <Folder Include="Interface\" />
-    <Folder Include="Validation\" />
     <Folder Include="SystemModels\" />
   </ItemGroup>
 

@@ -1,7 +1,7 @@
 <Solution>
+  <Project Path="HealthIA.API/HealthIA.API.csproj" Id="902d41b4-0d33-419d-9bc6-f7dbbc33b094" />
   <Project Path="HealthIA.Application/HealthIA.Application.csproj" Id="e55c0ad6-c55f-4293-b464-4d49fb1819a1" />
   <Project Path="HealthIA.Domain/HealthIA.Domain.csproj" Id="4ad14f50-480d-46f9-b306-f3eb0e3efa0b" />
   <Project Path="HealthIA.Infra.Data/HealthIA.Infra.Data.csproj" Id="cbdfbe58-90f9-4482-b160-8b4a42a29cb5" />
   <Project Path="HealthIA.Infra.Ioc/HealthIA.Infra.Ioc.csproj" Id="630d1296-0b62-414e-b8fe-6e02ab79bc73" />
-  <Project Path="HeathIA.IA/HealthIA.IA.csproj" />
 </Solution>
