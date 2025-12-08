@@ -8,36 +8,36 @@ namespace HealthIA.Domain.Entities
     public int Id { get; private set; }
     public string Nome { get; private set; }
     public string Email { get; private set; }
-    public byte[] SenhaHash { get; private set; }
-    public byte[] SenhaSalt { get; private set; }
-    public bool IsAdmin { get; private set; }
+        //public byte[] SenhaHash { get; private set; }
+        // public byte[] SenhaSalt { get; private set; }
+    public string IsAdmin { get; private set; } = "cliente";
 
     private Usuario() { } 
 
-    public Usuario(int id, string nome, string email, bool isadmin)
+    public Usuario(int id, string nome, string email, string isadmin)
     {
         DomainExceptionValidation.When(id < 0, "Id do usuário inválido.");
         this.Id = id;
         Validacao(nome, email, isadmin);
     }
 
-    public Usuario(string nome, string email, bool isadmin)
+    public Usuario(string nome, string email, string isadmin)
     {
         Validacao(nome, email, isadmin);
     }
 
-    public void setAdmin(bool isadmin)
-    {
-        this.IsAdmin = isadmin;
-    }
+    //public void SetSenha(byte[] senhaHash, byte[] senhaSalt)
+    //{
+    //    this.SenhaHash = senhaHash;
+    //    this.SenhaSalt = senhaSalt;
+    //}
 
-    public void SetSenha(byte[] senhaHash, byte[] senhaSalt)
-    {
-        this.SenhaHash = senhaHash;
-        this.SenhaSalt = senhaSalt;
-    }
+        public void setIsAdmin(string isadmin)
+        {
+            this.IsAdmin = isadmin;
+        }   
 
-    public void Validacao(string nome, string email, bool isadmin)
+        public void Validacao(string nome, string email, string isadmin)
     {
         DomainExceptionValidation.When(string.IsNullOrEmpty(nome), "Nome do usuário inválido. O nome é obrigatório.");
         DomainExceptionValidation.When(nome.Length < 3, "O Nome está muito curto");

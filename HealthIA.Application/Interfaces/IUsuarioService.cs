@@ -8,9 +8,9 @@ namespace HealthIA.Application.Interfaces
 {
     public interface IUsuarioService
     {
-        Task<UsuarioDTO> Incluir(Usuario usuario);
-        Task<UsuarioDTO> Alterar(Usuario usuario);
-        Task<UsuarioDTO> Excluir(int usuarioId);
+        Task<UsuarioDTO> Incluir(UsuarioDTO usuarioDto);
+        Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDto);
+        Task<UsuarioDTO> Excluir(int usuarioDtoId);
         Task<UsuarioDTO> Login(string email, string senha);
         Task<UsuarioDTO> ObterPorId(int id);
         Task<IEnumerable<UsuarioDTO>> ObterTodosAsync();

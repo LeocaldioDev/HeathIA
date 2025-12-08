@@ -20,29 +20,48 @@ namespace HealthIA.Application.Services
             this.mapper = mapper;
         }
 
-        public Task<PacienteDTO> Alterar(Paciente paciente)
+        public async Task<PacienteDTO> Alterar(PacienteDTO pacienteDto)
         {
-            throw new NotImplementedException();
+            var PAciente = mapper.Map<Paciente>(pacienteDto);
+            var PacienteAlterado = await  _pacienteRepository.Alterar(PAciente);
+            var pacientedto = mapper.Map<PacienteDTO>(PacienteAlterado);
+            return pacientedto;
+
         }
 
-        public Task<PacienteDTO> Excluir(int paciente)
+        public async Task<PacienteDTO> Excluir(int paciente)
         {
-            throw new NotImplementedException();
+            var pacientee = await _pacienteRepository.Excluir(paciente);
+            var cleintedto = mapper.Map<PacienteDTO>(pacientee);
+            return cleintedto;
         }
 
-        public Task<PacienteDTO> Incluir(Paciente paciente)
+        public async  Task<PacienteDTO> Incluir(PacienteDTO pacienteDto)
         {
-            throw new NotImplementedException();
+            var PAciente = mapper.Map<Paciente>(pacienteDto);
+            var PacienteAlterado = await _pacienteRepository.Incluir(PAciente);
+            var pacientedto = mapper.Map<PacienteDTO>(PacienteAlterado);
+            return pacientedto;
         }
 
-        public Task<PacientePostDTO> ObterPorId(int id)
+        public async Task<PacientePostDTO> ObterPorIdPost(int id)
         {
-            throw new NotImplementedException();
+            var pacientee = await _pacienteRepository.ObterPorId(id);
+            var cleintedto = mapper.Map<PacientePostDTO>(pacientee);
+            return cleintedto;
+        }
+        public async Task<PacienteDTO> ObterPorId(int id)
+        {
+            var pacientee = await _pacienteRepository.ObterPorId(id);
+            var cleintedto = mapper.Map<PacienteDTO>(pacientee);
+            return cleintedto;
         }
 
-        public Task<IEnumerable<PacientePostDTO>> ObterTodosAsync()
+        public async Task<IEnumerable<PacientePostDTO>> ObterTodosAsync()
         {
-            throw new NotImplementedException();
+            var pacientes = await _pacienteRepository.ObterTodosAsync();
+            var cleintedto = mapper.Map<IEnumerable<PacientePostDTO>>(pacientes);
+            return cleintedto;
         }
     }
 }

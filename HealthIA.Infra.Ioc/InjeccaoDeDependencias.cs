@@ -33,6 +33,7 @@ namespace HealthIA.Infra.Ioc
             services.AddScoped<IConsultaRepository, ConsultaRepository>();
             services.AddScoped<IPacienteRepository, PacienteRepository>();
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IMedicoRepository, MedicoRepository>();
 
 
             //injecção de dependecias service
@@ -40,6 +41,9 @@ namespace HealthIA.Infra.Ioc
             services.AddScoped<IConsultaService, ConsultaService>();
             services.AddScoped<IPacienteService, PacienteService>();
             services.AddScoped<IUsuarioService, UsuarioService>();
+            services.AddScoped<IMedicoService, MedicoService>();
+
+
 
 
            

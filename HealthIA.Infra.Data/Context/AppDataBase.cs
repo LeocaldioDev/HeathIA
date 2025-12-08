@@ -16,6 +16,7 @@ namespace HealthIA.Infra.Data.Context
         public DbSet<Paciente> Pacientes { get; set; }
         public DbSet<Consulta> Consultas { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<Medico> Medicos { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder builder)

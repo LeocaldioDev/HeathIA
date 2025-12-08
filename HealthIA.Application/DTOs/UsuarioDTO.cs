@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace HealthIA.Application.DTOs
 {
@@ -16,9 +17,8 @@ namespace HealthIA.Application.DTOs
         [Required(ErrorMessage = "O Email é obrigatório!")]
         [EmailAddress(ErrorMessage ="O Email informado é inválido!")]
         public string Email { get; set; }
-        [NotMapped]
-        public string password { get; set; }
-
-        public bool IsAdmin { get; set; }
+     
+        //public string password { get; set; }
+       
     }
 }

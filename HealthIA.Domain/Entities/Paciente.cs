@@ -12,8 +12,10 @@ namespace HealthIA.Domain.Entities
     public string Email { get; private set; }
     public string Telefone { get; private set; }
 
-    // Relação: Paciente tem muitas Consultas
-    public ICollection<Consulta> Consultas { get; private set; } = new List<Consulta>();
+    public Usuario Usuario { get; set; }
+
+        // Relação: Paciente tem muitas Consultas
+        public ICollection<Consulta> Consultas { get; private set; } = new List<Consulta>();
 
     public Paciente(int id, string nome, DateTime dataNascimento, string sexo, string email, string telefone)
     {

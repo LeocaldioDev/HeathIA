@@ -18,29 +18,42 @@ namespace HealthIA.Application.Services
             _consultaRepository = consultaRepository;
             this.mapper = mapper;
         }
-        public Task<ConsultaDTO> Alterar(Consulta consulta)
+
+        public async Task<ConsultaDTO> Alterar(ConsultaDTO consultaDto)
         {
-            throw new NotImplementedException();
+            var consulta = mapper.Map<Consulta>(consultaDto);
+            var consultaalter = await _consultaRepository.Alterar(consulta);
+            var consultadto = mapper.Map<ConsultaDTO>(consultaalter);
+            return consultadto;
         }
 
-        public Task<ConsultaDTO> Excluir(int consulta)
+        public async Task<ConsultaDTO> Excluir(int consulta)
         {
-            throw new NotImplementedException();
+            var consultaa = await _consultaRepository.Excluir(consulta);
+            var clienteDto = mapper.Map<ConsultaDTO>(consultaa);
+            return clienteDto;
         }
 
-        public Task<ConsultaDTO> Incluir(Consulta consulta)
+        public async Task<ConsultaDTO> Incluir(ConsultaDTO consultaDto)
         {
-            throw new NotImplementedException();
+            var consulta = mapper.Map<Consulta>(consultaDto);
+            var consultaalter = await _consultaRepository.Incluir(consulta);
+            var consultadto = mapper.Map<ConsultaDTO>(consultaalter);
+            return consultadto;
         }
 
-        public Task<ConsultaDTO> ObterPorId(int id)
+        public async Task<ConsultaDTO> ObterPorId(int id)
         {
-            throw new NotImplementedException();
+            var consultaa = await _consultaRepository.ObterPorId(id);
+            var clienteDto = mapper.Map<ConsultaDTO>(consultaa);
+            return clienteDto;
         }
 
-        public Task<IEnumerable<ConsultaDTO>> ObterTodosAsync()
+        public async Task<IEnumerable<ConsultaDTO>> ObterTodosAsync()
         {
-            throw new NotImplementedException();
+            var consultaa = await _consultaRepository.ObterTodosAsync();
+            var clienteDto = mapper.Map<IEnumerable<ConsultaDTO>>(consultaa);
+            return clienteDto;
         }
     }
 }

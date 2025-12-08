@@ -20,34 +20,47 @@ namespace HealthIA.Application.Services
             this.mapper = mapper;
         }
 
-        public Task<UsuarioDTO> Alterar(Usuario usuario)
+        public async Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDto)
         {
-            throw new NotImplementedException();
+            var usuario = mapper.Map<Usuario>(usuarioDto);
+            var usuarioEntity = await _usuarioRepository.Incluir(usuario);
+            var usuarioDt = mapper.Map<UsuarioDTO>(usuarioEntity);
+            return usuarioDt;
         }
 
-        public Task<UsuarioDTO> Excluir(int usuarioId)
+        public async Task<UsuarioDTO> Excluir(int usuarioId)
         {
-            throw new NotImplementedException();
+            var result = await _usuarioRepository.Excluir(usuarioId);
+            var usuarioDto = mapper.Map<UsuarioDTO>(result);
+            return usuarioDto;
         }
 
-        public Task<UsuarioDTO> Incluir(Usuario usuario)
+        public async  Task<UsuarioDTO> Incluir(UsuarioDTO usuario)
         {
-            throw new NotImplementedException();
+            var usuarioo = mapper.Map<Usuario>(usuario);
+         var usuarioEntity = await  _usuarioRepository.Incluir(usuarioo);
+            var usuarioDt = mapper.Map<UsuarioDTO>(usuarioEntity);
+           return usuarioDt;
         }
+
 
         public Task<UsuarioDTO> Login(string email, string senha)
         {
             throw new NotImplementedException();
         }
 
-        public Task<UsuarioDTO> ObterPorId(int id)
+        public async Task<UsuarioDTO> ObterPorId(int id)
         {
-            throw new NotImplementedException();
+            var usuario =await  _usuarioRepository.ObterPorId(id);
+            var usuarioDto = mapper.Map<UsuarioDTO>(usuario);
+            return usuarioDto;
         }
 
-        public Task<IEnumerable<UsuarioDTO>> ObterTodosAsync()
+        public async  Task<IEnumerable<UsuarioDTO>> ObterTodosAsync()
         {
-            throw new NotImplementedException();
+           var Usuarios = await _usuarioRepository.ObterTodosAsync();
+            var usuarioDtos = mapper.Map<IEnumerable<UsuarioDTO>>(Usuarios);
+            return usuarioDtos;
         }
     }
 }
