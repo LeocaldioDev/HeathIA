@@ -1,53 +1,65 @@
 ﻿using HealthIA.Domain.Validation;
 
-
 namespace HealthIA.Domain.Entities
 {
+    public enum UserRole
+    {
+        Admin = 1,
+        Medico = 2,
+        Paciente = 3
+    }
+
     public class Usuario
-{
-    public int Id { get; private set; }
-    public string Nome { get; private set; }
-    public string Email { get; private set; }
-        //public byte[] SenhaHash { get; private set; }
-        // public byte[] SenhaSalt { get; private set; }
-    public string IsAdmin { get; private set; } = "cliente";
-
-    private Usuario() { } 
-
-    public Usuario(int id, string nome, string email, string isadmin)
     {
-        DomainExceptionValidation.When(id < 0, "Id do usuário inválido.");
-        this.Id = id;
-        Validacao(nome, email, isadmin);
-    }
+        public int Id { get; private set; }
+        public string Email { get; private set; }
+        public byte[] SenhaHash { get; private set; }
+        public byte[] SenhaSalt { get; private set; }
+        public UserRole Role { get; private set; }
+        public Paciente Paciente { get; private set; }
+        public Admin admin { get; private set; }
+        public Medico medico { get; private set; }
 
-    public Usuario(string nome, string email, string isadmin)
-    {
-        Validacao(nome, email, isadmin);
-    }
+        private Usuario() { }
 
-    //public void SetSenha(byte[] senhaHash, byte[] senhaSalt)
-    //{
-    //    this.SenhaHash = senhaHash;
-    //    this.SenhaSalt = senhaSalt;
-    //}
-
-        public void setIsAdmin(string isadmin)
+   
+        public Usuario(int id, string email, UserRole role)
         {
-            this.IsAdmin = isadmin;
-        }   
+            DomainExceptionValidation.When(id < 0, "Id do usuário inválido.");
+            DomainExceptionValidation.When(!Enum.IsDefined(typeof(UserRole), role), "Nível de acesso inexistente.");
 
-        public void Validacao(string nome, string email, string isadmin)
-    {
-        DomainExceptionValidation.When(string.IsNullOrEmpty(nome), "Nome do usuário inválido. O nome é obrigatório.");
-        DomainExceptionValidation.When(nome.Length < 3, "O Nome está muito curto");
-        DomainExceptionValidation.When(string.IsNullOrEmpty(email), "Email do usuário inválido. O email é obrigatório.");
-        DomainExceptionValidation.When(email.Length < 5, "O email está muito curto");
+            Id = id;
+            Role = role;
+            Validacao( email);
+        }
 
-        this.Nome = nome;
-        this.Email = email;
+        public Usuario( string email, UserRole role)
+        {
+            DomainExceptionValidation.When(!Enum.IsDefined(typeof(UserRole), role), "Nível de acesso inexistente.");
+            Role = role;
+            Validacao( email);
+        }
 
-        this.IsAdmin = isadmin;
+        public void SetSenha(byte[] senhaHash, byte[] senhaSalt)
+        {
+            SenhaHash = senhaHash;
+            SenhaSalt = senhaSalt;
+        }
+
+        public void SetRole(UserRole role)
+        {
+            DomainExceptionValidation.When(!Enum.IsDefined(typeof(UserRole), role), "Nível de acesso inexistente.");
+            Role = role;
+        }
+
+        private void Validacao( string email)
+        {
+            
+            DomainExceptionValidation.When(string.IsNullOrWhiteSpace(email), "Email do usuário inválido. O email é obrigatório.");
+            DomainExceptionValidation.When(email.Length < 5, "O email está muito curto.");
+
+           
+            Email = email;
+        }
     }
-}
 }

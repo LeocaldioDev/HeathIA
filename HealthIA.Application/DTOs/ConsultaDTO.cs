@@ -20,5 +20,7 @@ namespace HealthIA.Application.DTOs
         public DateTime DataConsulta { get; set; }
         [Required(ErrorMessage = "O Paciente em questao é obrigatório")]
         public int PacienteId { get; set; }
+
+        public bool Validacaomedica { get; private set; }
     }
 }

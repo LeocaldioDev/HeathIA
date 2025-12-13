@@ -23,7 +23,14 @@ namespace HealthIA.Application.Services
         public async Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDto)
         {
             var usuario = mapper.Map<Usuario>(usuarioDto);
-            var usuarioEntity = await _usuarioRepository.Incluir(usuario);
+            if(usuarioDto.password != null)
+            {
+                using var hmac = new System.Security.Cryptography.HMACSHA256();
+                var senhaSalt = hmac.Key;
+                var senhaHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(usuarioDto.password));
+                usuario.SetSenha(senhaHash, senhaSalt);
+            }
+            var usuarioEntity = await _usuarioRepository.Alterar(usuario);
             var usuarioDt = mapper.Map<UsuarioDTO>(usuarioEntity);
             return usuarioDt;
         }
@@ -38,16 +45,19 @@ namespace HealthIA.Application.Services
         public async  Task<UsuarioDTO> Incluir(UsuarioDTO usuario)
         {
             var usuarioo = mapper.Map<Usuario>(usuario);
+            if(usuario.password != null)
+            {
+                using var hmac = new System.Security.Cryptography.HMACSHA256();
+                var senhaSalt = hmac.Key;
+                var senhaHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(usuario.password));
+                usuarioo.SetSenha(senhaHash, senhaSalt);
+            }
          var usuarioEntity = await  _usuarioRepository.Incluir(usuarioo);
             var usuarioDt = mapper.Map<UsuarioDTO>(usuarioEntity);
            return usuarioDt;
         }
 
 
-        public Task<UsuarioDTO> Login(string email, string senha)
-        {
-            throw new NotImplementedException();
-        }
 
         public async Task<UsuarioDTO> ObterPorId(int id)
         {
@@ -61,6 +71,10 @@ namespace HealthIA.Application.Services
            var Usuarios = await _usuarioRepository.ObterTodosAsync();
             var usuarioDtos = mapper.Map<IEnumerable<UsuarioDTO>>(Usuarios);
             return usuarioDtos;
+        }
+        public async Task<bool> ExisteUsuarioCadastradoAsync()
+        {
+            return await _usuarioRepository.ExisteUsuarioCadastradoAsync();
         }
     }
 }

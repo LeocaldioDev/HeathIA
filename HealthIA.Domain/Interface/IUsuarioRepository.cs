@@ -10,8 +10,8 @@ namespace HealthIA.Domain.Interface
         Task<Usuario> Incluir(Usuario usuario);
         Task<Usuario> Alterar(Usuario usuario);
         Task<Usuario> Excluir(int usuarioId);
-        Task<Usuario> Login (string email, string senha);
         Task<Usuario> ObterPorId(int id);
         Task<IEnumerable<Usuario>> ObterTodosAsync();
+        Task<bool> ExisteUsuarioCadastradoAsync();
     }
 }

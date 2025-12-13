@@ -11,7 +11,11 @@ public class ConfiguracaoDoPaciente : IEntityTypeConfiguration<Paciente>
         builder.Property(p => p.Nome).IsRequired().HasMaxLength(100);
         builder.Property(p => p.DataNascimento).IsRequired();
         builder.Property(p => p.Sexo).IsRequired();
-        builder.Property(p => p.Email).IsRequired().HasMaxLength(150);
         builder.Property(p => p.Telefone).HasMaxLength(20);
+
+        builder.HasOne(p => p.Usuario)
+               .WithOne(u => u.Paciente)
+               .HasForeignKey<Paciente>(p => p.UsuarioId)
+               .IsRequired();
     }
 }

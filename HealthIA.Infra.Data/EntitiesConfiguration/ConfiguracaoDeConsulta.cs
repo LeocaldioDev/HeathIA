@@ -19,6 +19,8 @@ public class ConfiguracaoDeConsulta : IEntityTypeConfiguration<Consulta>
         builder.Property(c => c.DataConsulta)
             .IsRequired();
 
+        builder.Property(c => c.Validacaomedica);
+
         // Relação 1:N
         builder.HasOne(c => c.Paciente)
                .WithMany(p => p.Consultas)

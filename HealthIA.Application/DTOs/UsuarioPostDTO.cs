@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace HealthIA.Application.DTOs
 {
-    public class UsuarioDTO
+    public class UsuarioPostDTO
     {
         [Key]
         public int Id { get; set; }
@@ -16,7 +16,7 @@ namespace HealthIA.Application.DTOs
         [EmailAddress(ErrorMessage ="O Email informado é inválido!")]
         public string Email { get; set; }
 
-        [JsonIgnore]
+        
         public UserRole Role { get; set; }
         public string password { get; set; }
 

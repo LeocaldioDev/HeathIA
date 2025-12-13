@@ -11,8 +11,8 @@ namespace HealthIA.Application.Interfaces
         Task<UsuarioDTO> Incluir(UsuarioDTO usuarioDto);
         Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDto);
         Task<UsuarioDTO> Excluir(int usuarioDtoId);
-        Task<UsuarioDTO> Login(string email, string senha);
         Task<UsuarioDTO> ObterPorId(int id);
         Task<IEnumerable<UsuarioDTO>> ObterTodosAsync();
+        Task<bool> ExisteUsuarioCadastradoAsync();
     }
 }

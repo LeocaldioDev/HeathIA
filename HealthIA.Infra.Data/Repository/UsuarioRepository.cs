@@ -17,10 +17,22 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Usuario> Alterar(Usuario usuario)
         {
-           var usuarioExistente = _context.Usuarios.Find(usuario.Id);
-            _context.Usuarios.Update(usuarioExistente);
+           var local = _context.Usuarios.Local.FirstOrDefault(x=>x.Id == usuario.Id);
+              if(local != null)
+                {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+              if(usuario.SenhaSalt ==null || usuario.SenhaHash == null)
+            {
+                var passwordCriptografado = await _context.Usuarios.
+                    AsNoTracking().
+                    Select(x => new { x.SenhaHash, x.SenhaSalt }).
+                    FirstOrDefaultAsync();
+                usuario.SetSenha(passwordCriptografado.SenhaHash, passwordCriptografado.SenhaSalt);
+            }
+            _context.Usuarios.Update(usuario);
             await _context.SaveChangesAsync();
-            return usuarioExistente;
+            return usuario;
         }
 
         public async Task<Usuario> Excluir(int usuarioId)
@@ -38,10 +50,7 @@ namespace HealthIA.Infra.Data.Repository
             return usuario;
         }
 
-        public Task<Usuario> Login(string email, string senha)
-        {
-            throw new NotImplementedException();
-        }
+        
 
         public async Task<Usuario> ObterPorId(int id)
         {
@@ -55,5 +64,12 @@ namespace HealthIA.Infra.Data.Repository
           var usuarios = await _context.Usuarios.ToListAsync();
             return usuarios;
         }
+
+
+        public async Task<bool> ExisteUsuarioCadastradoAsync()
+        {
+            return await _context.Usuarios.AnyAsync();
+        }
+
     }
 }

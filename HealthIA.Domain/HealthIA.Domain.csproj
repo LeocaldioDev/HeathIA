@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Account\" />
     <Folder Include="SystemModels\" />
   </ItemGroup>
 

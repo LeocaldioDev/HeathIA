@@ -1,5 +1,6 @@
 ﻿using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
+using HealthIA.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthIA.API.Controllers

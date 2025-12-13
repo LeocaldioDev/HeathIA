@@ -4,6 +4,7 @@ using HealthIA.Infra.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HealthIA.Infra.Data.Migrations
 {
     [DbContext(typeof(AppDataBase))]
-    partial class AppDataBaseModelSnapshot : ModelSnapshot
+    [Migration("20251212123335_novaMigrationEntities")]
+    partial class novaMigrationEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,6 +33,11 @@ namespace HealthIA.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -40,8 +48,7 @@ namespace HealthIA.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Admins");
                 });
@@ -88,6 +95,11 @@ namespace HealthIA.Infra.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
                     b.Property<string>("Nome")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -98,8 +110,7 @@ namespace HealthIA.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UsuarioId")
-                        .IsUnique();
+                    b.HasIndex("UsuarioId");
 
                     b.ToTable("Medicos");
                 });
@@ -114,6 +125,11 @@ namespace HealthIA.Infra.Data.Migrations
 
                     b.Property<DateTime>("DataNascimento")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -153,8 +169,14 @@ namespace HealthIA.Infra.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Role")
-                        .HasColumnType("int");
+                    b.Property<string>("IsAdmin")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(90)
+                        .HasColumnType("nvarchar(90)");
 
                     b.Property<byte[]>("SenhaHash")
                         .IsRequired()
@@ -172,8 +194,8 @@ namespace HealthIA.Infra.Data.Migrations
             modelBuilder.Entity("HealthIA.Domain.Entities.Admin", b =>
                 {
                     b.HasOne("HealthIA.Domain.Entities.Usuario", "Usuario")
-                        .WithOne("admin")
-                        .HasForeignKey("HealthIA.Domain.Entities.Admin", "UsuarioId")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -194,8 +216,8 @@ namespace HealthIA.Infra.Data.Migrations
             modelBuilder.Entity("HealthIA.Domain.Entities.Medico", b =>
                 {
                     b.HasOne("HealthIA.Domain.Entities.Usuario", "Usuario")
-                        .WithOne("medico")
-                        .HasForeignKey("HealthIA.Domain.Entities.Medico", "UsuarioId")
+                        .WithMany()
+                        .HasForeignKey("UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -205,7 +227,7 @@ namespace HealthIA.Infra.Data.Migrations
             modelBuilder.Entity("HealthIA.Domain.Entities.Paciente", b =>
                 {
                     b.HasOne("HealthIA.Domain.Entities.Usuario", "Usuario")
-                        .WithOne("Paciente")
+                        .WithOne("paciente")
                         .HasForeignKey("HealthIA.Domain.Entities.Paciente", "UsuarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -220,13 +242,7 @@ namespace HealthIA.Infra.Data.Migrations
 
             modelBuilder.Entity("HealthIA.Domain.Entities.Usuario", b =>
                 {
-                    b.Navigation("Paciente")
-                        .IsRequired();
-
-                    b.Navigation("admin")
-                        .IsRequired();
-
-                    b.Navigation("medico")
+                    b.Navigation("paciente")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

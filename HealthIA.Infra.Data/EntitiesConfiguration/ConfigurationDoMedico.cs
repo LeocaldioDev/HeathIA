@@ -15,9 +15,11 @@ namespace HealthIA.Infra.Data.EntitiesConfiguration
             builder.Property(m => m.Nome)
                    .IsRequired()
                    .HasMaxLength(100);
-            builder.Property(m => m.Email).IsRequired().HasMaxLength(70);
 
-            builder.Property(m => m.IsAdmin).IsRequired().HasMaxLength(20);
+            builder.HasOne(p => p.Usuario)
+             .WithOne(u => u.medico)
+             .HasForeignKey<Medico>(p => p.UsuarioId)
+             .IsRequired();
         }
     }
 }

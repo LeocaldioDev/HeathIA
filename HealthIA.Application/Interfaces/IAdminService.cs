@@ -1,10 +1,16 @@
-﻿using System;
+﻿using HealthIA.Application.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace HealthIA.Application.Interfaces
 {
-    internal interface IAdminService
+    public interface IAdminService
     {
+        Task<AdminDTO> Incluir(AdminDTO admin);
+        Task<AdminDTO> Alterar(AdminDTO admin);
+        Task<AdminDTO> Excluir(int admin);
+        Task<AdminDTO> ObterPorId(int id);
+        Task<IEnumerable<AdminDTO>> ObterTodosAsync();
     }
 }
