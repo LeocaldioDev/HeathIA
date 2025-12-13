@@ -31,6 +31,10 @@ namespace HealthIA.Domain.Entities
             Nome = nome;
         }
 
+        public void setUsuarioID(int usuarioid) {
+            UsuarioId = usuarioid;
+        }
+
 
 
         public void validacao(string nome)

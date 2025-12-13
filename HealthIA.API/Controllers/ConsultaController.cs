@@ -1,5 +1,11 @@
-﻿using HealthIA.Application.DTOs;
+﻿using Google.GenAI;
+using Google.GenAI.Types;
+using HealthIA.Application.DTOs;
+using HealthIA.Application.IGemini;
 using HealthIA.Application.Interfaces;
+using HealthIA.Application.Services;
+using HealthIA.Domain.Interface;
+using HealthIA.Infra.Ioc;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthIA.API.Controllers
@@ -8,17 +14,39 @@ namespace HealthIA.API.Controllers
     [Route("Api/[controller]")]
     public class ConsultaController : Controller
     {
+        private readonly Client _genClient;
         public readonly IConsultaService consultaService;
-        public ConsultaController(IConsultaService consultaService)
+        public readonly IUsuarioService usuarioService;
+        public readonly IPacienteRepository pacienteRepository;
+        public readonly IGeminiService geminiService;
+
+
+        public ConsultaController(IConsultaService _consultaService, IUsuarioService _usuarioService, Google.GenAI.Client genClient,IGeminiService gemini)
         {
-            this.consultaService = consultaService;
+            consultaService = _consultaService;
+            usuarioService = _usuarioService;
+            _genClient = genClient;
+            geminiService = gemini;
+
         }
 
         [HttpPost("Incluir")]
         public async Task<IActionResult> Incluir(ConsultaDTO consultadto)
         {
-            if (consultadto == null)
-                return BadRequest("Insira dados validos para a consulta");
+            if (consultadto.Sintomas == null)
+                return BadRequest("insira os sintomas");
+
+
+
+            var sintomasOrganizados = await geminiService.GerarDiagnosticoAsync(consultadto.Sintomas);
+            if (string.IsNullOrEmpty(sintomasOrganizados))
+                return BadRequest("Não foi possível gerar um diagnóstico com base nos sintomas fornecidos.");
+            consultadto.DiagnosticoIA = sintomasOrganizados;
+            consultadto.DataConsulta = DateTime.UtcNow;
+            var usuarioId = User.GetId();
+            var usuario = await usuarioService.ObterPorId(usuarioId);
+            consultadto.PacienteId = usuario.Paciente.Id;
+
             var consulta = await consultaService.Incluir(consultadto);
             return Ok(consulta);
         }
@@ -26,7 +54,7 @@ namespace HealthIA.API.Controllers
         [HttpPut("Alterar")]
         public async Task<IActionResult> Alterar(ConsultaDTO consultadto)
         {
-            var consulta = await consultaService.ObterPorId(consultadto.Id);
+            var consulta = await consultaService.ObterPorIdsempost(consultadto.Id);
             if (consulta == null || consulta.Id <= 0)
                 return BadRequest("Insira dados validos para a consulta");
             await consultaService.Alterar(consulta);

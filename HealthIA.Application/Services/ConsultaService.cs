@@ -19,40 +19,46 @@ namespace HealthIA.Application.Services
             this.mapper = mapper;
         }
 
-        public async Task<ConsultaDTO> Alterar(ConsultaDTO consultaDto)
+        public async Task<ConsultaPostDTO> Alterar(ConsultaPostDTO consultaDto)
         {
             var consulta = mapper.Map<Consulta>(consultaDto);
             var consultaalter = await _consultaRepository.Alterar(consulta);
-            var consultadto = mapper.Map<ConsultaDTO>(consultaalter);
+            var consultadto = mapper.Map<ConsultaPostDTO>(consultaalter);
             return consultadto;
         }
 
-        public async Task<ConsultaDTO> Excluir(int consulta)
+        public async Task<ConsultaPostDTO> Excluir(int consulta)
         {
             var consultaa = await _consultaRepository.Excluir(consulta);
-            var clienteDto = mapper.Map<ConsultaDTO>(consultaa);
+            var clienteDto = mapper.Map<ConsultaPostDTO>(consultaa);
             return clienteDto;
         }
 
-        public async Task<ConsultaDTO> Incluir(ConsultaDTO consultaDto)
+        public async Task<ConsultaPostDTO> Incluir(ConsultaDTO consultaDto)
         {
             var consulta = mapper.Map<Consulta>(consultaDto);
             var consultaalter = await _consultaRepository.Incluir(consulta);
-            var consultadto = mapper.Map<ConsultaDTO>(consultaalter);
+            var consultadto = mapper.Map<ConsultaPostDTO>(consultaalter);
             return consultadto;
         }
 
-        public async Task<ConsultaDTO> ObterPorId(int id)
+        public async Task<ConsultaPostDTO> ObterPorId(int id)
         {
             var consultaa = await _consultaRepository.ObterPorId(id);
-            var clienteDto = mapper.Map<ConsultaDTO>(consultaa);
+            var clienteDto = mapper.Map<ConsultaPostDTO>(consultaa);
+            return clienteDto;
+        }
+        public async Task<ConsultaPostDTO> ObterPorIdsempost(int id)
+        {
+            var consultaa = await _consultaRepository.ObterPorId(id);
+            var clienteDto = mapper.Map<ConsultaPostDTO>(consultaa);
             return clienteDto;
         }
 
-        public async Task<IEnumerable<ConsultaDTO>> ObterTodosAsync()
+        public async Task<IEnumerable<ConsultaPostDTO>> ObterTodosAsync()
         {
             var consultaa = await _consultaRepository.ObterTodosAsync();
-            var clienteDto = mapper.Map<IEnumerable<ConsultaDTO>>(consultaa);
+            var clienteDto = mapper.Map<IEnumerable<ConsultaPostDTO>>(consultaa);
             return clienteDto;
         }
     }

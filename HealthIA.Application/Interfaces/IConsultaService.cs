@@ -8,10 +8,11 @@ namespace HealthIA.Application.Interfaces
 {
     public  interface IConsultaService
     {
-        Task<ConsultaDTO> Incluir(ConsultaDTO consultaDto);
-        Task<ConsultaDTO> Alterar(ConsultaDTO consultaDto);
-        Task<ConsultaDTO> Excluir(int consulta);
-        Task<ConsultaDTO> ObterPorId(int id);
-        Task<IEnumerable<ConsultaDTO>> ObterTodosAsync();
+        Task<ConsultaPostDTO> Incluir(ConsultaDTO consultaDto);
+        Task<ConsultaPostDTO> Alterar(ConsultaPostDTO consultaDto);
+        Task<ConsultaPostDTO> Excluir(int consulta);
+        Task<ConsultaPostDTO> ObterPorId(int id);
+        Task<ConsultaPostDTO> ObterPorIdsempost(int id);
+        Task<IEnumerable<ConsultaPostDTO>> ObterTodosAsync();
     }
 }

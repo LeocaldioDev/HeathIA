@@ -84,7 +84,6 @@ namespace HealthIA.Infra.Ioc
 
 
 
-           
 
             return services;
 

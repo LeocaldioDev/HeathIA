@@ -7,21 +7,19 @@ using System.Text.Json.Serialization;
 
 namespace HealthIA.Application.DTOs
 {
-    public class ConsultaDTO
+    public class ConsultaPostDTO
     {
         [Key]
-        [JsonIgnore]
         public int Id { get; set; }
         [Required(ErrorMessage = "Os Sintomas são obrigatorios")]
         [MaxLength(1000, ErrorMessage = "Os Sintomas devem ter no maximo 1000 caracteres")]
-        public string Sintomas { get; set; } = null!;
-        [JsonIgnore]
-        public string? DiagnosticoIA { get; set; }
-        [JsonIgnore]
+        public string Sintomas { get; set; }
+        [Required(ErrorMessage = "O Diagnóstico é obrigatório")]
+        [MaxLength(2000, ErrorMessage = "O Diagnóstico deve ter no máximo 1000 caracteres")]
+        public string DiagnosticoIA { get; set; }
         public DateTime DataConsulta { get; set; }
-        [JsonIgnore]
         public int PacienteId { get; set; }
-        [JsonIgnore]
+
         public bool Validacaomedica { get;  set; }
     }
 }

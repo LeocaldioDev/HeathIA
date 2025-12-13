@@ -14,6 +14,7 @@ namespace HealthIA.Application.Mapping
            CreateMap<Paciente, PacienteDTO>().ReverseMap();
            CreateMap<Paciente, PacientePostDTO>().ReverseMap();
               CreateMap<Consulta, ConsultaDTO>().ReverseMap();
+              CreateMap<Consulta, ConsultaPostDTO>().ReverseMap();
             CreateMap<Usuario, UsuarioDTO>().ReverseMap();
             CreateMap<Usuario, UsuarioPostDTO>().ReverseMap();
             CreateMap<Medico, MedicoDTO>().ReverseMap();

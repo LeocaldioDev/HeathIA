@@ -50,13 +50,14 @@ namespace HealthIA.Infra.Data.Repository
             return usuario;
         }
 
-        
 
-        public async Task<Usuario> ObterPorId(int id)
+        public async Task<Usuario?> ObterPorId(int id)
         {
-            var usuario = await _context.Usuarios.FindAsync(id);
-            return usuario;
+            return await _context.Usuarios
+                .Include(u => u.Paciente)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
+
 
 
         public async Task<IEnumerable<Usuario>> ObterTodosAsync()

@@ -1,4 +1,5 @@
-﻿using HealthIA.Application.DTOs;
+﻿using HealthIA.API.Models;
+using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
 using HealthIA.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
@@ -35,6 +36,7 @@ namespace HealthIA.API.Controllers
             await admin.Alterar(adminexiste);
             return Ok(adminexiste);
         }
+
 
         [HttpDelete("Excluir")]
         public async Task<IActionResult> Excluir(int id)
