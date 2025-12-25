@@ -1,6 +1,8 @@
 ﻿using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using HealthIA.Infra.Data.Context;
+using HealthIA.Infra.Data.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Admin> Alterar(Admin admin)
         {
-            var adminexistente = _context.Admins.Find(admin.Id);
+            var adminexistente =await  _context.Admins.FindAsync(admin.Id);
             _context.Admins.Update(adminexistente);
             await _context.SaveChangesAsync();
             return adminexistente;
@@ -25,7 +27,7 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Admin> Excluir(int admin)
         {
-            var adminid = _context.Admins.Find(admin);
+            var adminid = await _context.Admins.FindAsync(admin);
             _context.Admins.Remove(adminid);
             await _context.SaveChangesAsync();
             return adminid;
@@ -40,14 +42,15 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Admin> ObterPorId(int id)
         {
-            var admin = await _context.Admins.FirstAsync();
+            var admin = await _context.Admins.FirstOrDefaultAsync(x=>x.Id ==id);
             return admin;
         }
 
-        public async Task<IEnumerable<Admin>> ObterTodosAsync()
+        public async Task<PagedList<Admin>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-            var admins = await _context.Admins.ToListAsync();
-            return admins;
+            var query = _context.Admins.AsQueryable();
+
+            return await PaginationHelper.CreateAsync<Admin>(query, PageNumber, PageSize);
         }
     }
 }

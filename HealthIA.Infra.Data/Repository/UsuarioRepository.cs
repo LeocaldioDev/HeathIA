@@ -1,6 +1,8 @@
 ﻿using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using HealthIA.Infra.Data.Context;
+using HealthIA.Infra.Data.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -60,10 +62,10 @@ namespace HealthIA.Infra.Data.Repository
 
 
 
-        public async Task<IEnumerable<Usuario>> ObterTodosAsync()
+        public async Task<PagedList<Usuario>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-          var usuarios = await _context.Usuarios.ToListAsync();
-            return usuarios;
+            var query = _context.Usuarios.AsQueryable();
+            return await PaginationHelper.CreateAsync<Usuario>(query, PageNumber, PageSize);
         }
 
 

@@ -3,6 +3,7 @@ using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
 using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -20,7 +21,7 @@ namespace HealthIA.Application.Services
             this.mapper = mapper;
         }
 
-        public async Task<UsuarioDTO> Alterar(UsuarioDTO usuarioDto)
+        public async Task<UsuarioPostDTO> Alterar(UsuarioPostDTO usuarioDto)
         {
             var usuario = mapper.Map<Usuario>(usuarioDto);
             if(usuarioDto.password != null)
@@ -31,7 +32,7 @@ namespace HealthIA.Application.Services
                 usuario.SetSenha(senhaHash, senhaSalt);
             }
             var usuarioEntity = await _usuarioRepository.Alterar(usuario);
-            var usuarioDt = mapper.Map<UsuarioDTO>(usuarioEntity);
+            var usuarioDt = mapper.Map<UsuarioPostDTO>(usuarioEntity);
             return usuarioDt;
         }
 
@@ -42,7 +43,12 @@ namespace HealthIA.Application.Services
             return usuarioDto;
         }
 
-        public async  Task<UsuarioDTO> Incluir(UsuarioDTO usuario)
+        public Task<bool> ExisteUsuarioCadastradoAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public async  Task<UsuarioregisterDTO> Incluir(UsuarioregisterDTO usuario)
         {
             var usuarioo = mapper.Map<Usuario>(usuario);
             if(usuario.password != null)
@@ -53,7 +59,7 @@ namespace HealthIA.Application.Services
                 usuarioo.SetSenha(senhaHash, senhaSalt);
             }
          var usuarioEntity = await  _usuarioRepository.Incluir(usuarioo);
-            var usuarioDt = mapper.Map<UsuarioDTO>(usuarioEntity);
+            var usuarioDt = mapper.Map<UsuarioregisterDTO>(usuarioEntity);
            return usuarioDt;
         }
 
@@ -66,15 +72,13 @@ namespace HealthIA.Application.Services
             return usuarioDto;
         }
 
-        public async  Task<IEnumerable<UsuarioDTO>> ObterTodosAsync()
+        public async Task<PagedList<UsuarioDTO>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-           var Usuarios = await _usuarioRepository.ObterTodosAsync();
+           var Usuarios = await _usuarioRepository.ObterTodosAsync(PageNumber, PageSize);
             var usuarioDtos = mapper.Map<IEnumerable<UsuarioDTO>>(Usuarios);
-            return usuarioDtos;
+            return new PagedList<UsuarioDTO>(usuarioDtos, PageNumber, PageSize, Usuarios.TotalCount);
         }
-        public async Task<bool> ExisteUsuarioCadastradoAsync()
-        {
-            return await _usuarioRepository.ExisteUsuarioCadastradoAsync();
-        }
+
+       
     }
 }

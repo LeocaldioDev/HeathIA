@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace HealthIA.Application.DTOs
 {
-    public class UsuarioDTO
+    public class UsuarioregisterDTO
     {
         [Key]
         public int Id { get; set; }
@@ -19,15 +19,7 @@ namespace HealthIA.Application.DTOs
         [JsonIgnore]
         public UserRole Role { get; set; }
         public string password { get; set; }
-        [NotMapped]
-        [JsonIgnore]
-        public Paciente Paciente { get;  set; }
-        [NotMapped]
-        [JsonIgnore]
-        public Admin admin { get;  set; }
-        [NotMapped]
-        [JsonIgnore]
-        public Medico medico { get;  set; }
+        
 
     }
 }

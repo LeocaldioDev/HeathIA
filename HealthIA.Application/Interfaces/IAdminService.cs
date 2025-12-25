@@ -1,4 +1,5 @@
 ﻿using HealthIA.Application.DTOs;
+using HealthIA.Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace HealthIA.Application.Interfaces
         Task<AdminDTO> Alterar(AdminDTO admin);
         Task<AdminDTO> Excluir(int admin);
         Task<AdminDTO> ObterPorId(int id);
-        Task<IEnumerable<AdminDTO>> ObterTodosAsync();
+        Task<PagedList<AdminDTO>> ObterTodosAsync(int PageNumber, int PageSize);
     }
 }
+

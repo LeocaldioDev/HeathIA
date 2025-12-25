@@ -1,3 +1,4 @@
+using HealthIA.API.Middleware;
 using HealthIA.Application.GeminiService;
 using HealthIA.Application.IGemini;
 using HealthIA.Infra.Ioc;
@@ -14,19 +15,25 @@ if (string.IsNullOrWhiteSpace(geminiApiKey))
 Environment.SetEnvironmentVariable("GOOGLE_API_KEY", geminiApiKey);
 
 builder.Services.AddSingleton<Google.GenAI.Client>();
-
 builder.Services.AddScoped<IGeminiService, GeminiService>();
 
-
 builder.Services.AddControllers();
-
 builder.Services.AddInfrastructureSwagger();
-
-
 builder.Services.AddInfrastructure(builder.Configuration);
 
-var app = builder.Build();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("FrontendPolicy", policy =>
+    {
+        policy
+            .WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
@@ -38,10 +45,14 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+app.UseCors("FrontendPolicy");
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();

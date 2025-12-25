@@ -1,6 +1,8 @@
 ﻿using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using HealthIA.Infra.Data.Context;
+using HealthIA.Infra.Data.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Consulta> Alterar(Consulta consulta)
         {
-            var consultaId = _context.Consultas.Find(consulta.Id);
+            var consultaId = await _context.Consultas.FindAsync(consulta.Id);
             _context.Consultas.Update(consultaId);
             await _context.SaveChangesAsync();
             return consultaId;
@@ -27,7 +29,7 @@ namespace HealthIA.Infra.Data.Repository
 
         public async  Task<Consulta> Excluir(int consulta)
         {
-           var consultaId = _context.Consultas.Find(consulta);
+           var consultaId = await _context.Consultas.FindAsync(consulta);
             _context.Consultas.Remove(consultaId);
             await _context.SaveChangesAsync();
             return consultaId;  
@@ -43,14 +45,14 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Consulta> ObterPorId(int id)
         {
-            var consulta =  await _context.Consultas.FindAsync (id);
+            var consulta =  await _context.Consultas.FirstOrDefaultAsync (x=>x.Id==id);
             return consulta;
         }
 
-        public async Task<IEnumerable<Consulta>> ObterTodosAsync()
+        public async Task<PagedList<Consulta>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-            var consultas = await _context.Consultas.ToListAsync();
-            return consultas;
+            var query = _context.Consultas.AsQueryable();
+            return await PaginationHelper.CreateAsync<Consulta>(query, PageNumber, PageSize);
         }
     }
 }

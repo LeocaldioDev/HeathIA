@@ -65,10 +65,4 @@
     <ProjectReference Include="..\HealthIA.Infra.Ioc\HealthIA.Infra.Ioc.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Errors\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Middleware\" />
-  </ItemGroup>
-
 </Project>

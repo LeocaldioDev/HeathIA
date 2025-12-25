@@ -29,16 +29,16 @@ namespace HealthIA.API.Controllers
             IUsuarioService usuarioService,
             IAuthenticate authenticateService)
         {
-            _pacienteService = pacienteService;
-            _adminService = adminService;
-            _medicoService = medicoService;
-            _usuarioService = usuarioService;
-            _Authenticateservice = authenticateService;
+            this._pacienteService = pacienteService;
+            this._adminService = adminService;
+            this._medicoService = medicoService;
+            this._usuarioService = usuarioService;
+            this._Authenticateservice = authenticateService;
         }
 
 
         [HttpPost("admin")]
-        [Authorize(Roles = "Admin")]
+       [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserToken>> CadastrarAdmin(
      [FromBody] CadastroAdminModel model)
         {
@@ -50,11 +50,12 @@ namespace HealthIA.API.Controllers
                 return BadRequest("Este email já possui um cadastro.");
 
             // USUÁRIO
-            var usuarioDto = new UsuarioDTO
+            var usuarioDto = new UsuarioregisterDTO
             {
                 Email = model.Email,
                 Role = UserRole.Admin,
                 password = model.Password
+                
             };
 
             var usuario = await _usuarioService.Incluir(usuarioDto);
@@ -96,11 +97,12 @@ namespace HealthIA.API.Controllers
             if (emailExiste)
                 return BadRequest("Este email já possui cadastro.");
 
-            var usuarioS = new UsuarioDTO
+            var usuarioS = new UsuarioregisterDTO
             {
                 Email = user.Email,
                 Role = UserRole.Paciente,
                 password = user.Password
+                
             };
 
             var usuario = await _usuarioService.Incluir(usuarioS);
@@ -127,7 +129,6 @@ namespace HealthIA.API.Controllers
 
 
         [HttpPost("medico")]
-        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserToken>> CadastrarMedico(
       [FromBody] CadastroMedicoModel model)
         {
@@ -139,7 +140,7 @@ namespace HealthIA.API.Controllers
                 return BadRequest("Este email já possui um cadastro.");
 
             // USUÁRIO
-            var usuarioDto = new UsuarioDTO
+            var usuarioDto = new UsuarioregisterDTO
             {
                 Email = model.Email,
                 Role = UserRole.Medico,

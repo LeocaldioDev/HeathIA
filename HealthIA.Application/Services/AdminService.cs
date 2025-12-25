@@ -3,6 +3,7 @@ using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
 using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -50,11 +51,11 @@ namespace HealthIA.Application.Services
             return cleintedto;
         }
 
-        public async Task<IEnumerable<AdminDTO>> ObterTodosAsync()
+        public async Task<PagedList<AdminDTO>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-            var admins = await _adminRepository.ObterTodosAsync();
+            var admins = await _adminRepository.ObterTodosAsync(PageNumber, PageSize);
             var cleintedto = mapper.Map<IEnumerable<AdminDTO>>(admins);
-            return cleintedto;
+            return new PagedList<AdminDTO>(cleintedto, PageNumber, PageSize, admins.TotalCount);
         }
     }
 }

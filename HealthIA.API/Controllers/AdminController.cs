@@ -1,7 +1,9 @@
-﻿using HealthIA.API.Models;
+﻿using HealthIA.API.Extensions;
+using HealthIA.API.Models;
 using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
 using HealthIA.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthIA.API.Controllers
@@ -9,7 +11,7 @@ namespace HealthIA.API.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class AdminController : Controller
+    public class AdminController : ControllerBase
     {
         private readonly IAdminService admin;
         public AdminController(IAdminService adminService)
@@ -18,6 +20,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPost("Incluir")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Incluir(AdminDTO adminDTO)
         {
             if (adminDTO == null)
@@ -28,39 +31,55 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPut("Alterar")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Alterar(AdminDTO adminDTO)
         {
             var adminexiste = await admin.ObterPorId(adminDTO.Id);
-            if (adminexiste == null || adminexiste.Id <= 0)
+            if ( adminexiste == null|| adminexiste.Id <= 0)
                 return NotFound("Insira um usuario Valido");
             await admin.Alterar(adminexiste);
             return Ok(adminexiste);
         }
 
 
-        [HttpDelete("Excluir")]
+        [HttpDelete("Excluir/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Excluir(int id)
         {
             var admino = await admin.ObterPorId(id);
-            if (admino.Id <= 0 || admino == null)
+            if (admino == null || admino.Id <= 0)
                 return NotFound("Insira um Id Valido");
             await admin.Excluir(admino.Id);
             return Ok("Admin Excluido com Sucesso");
         }
 
-        [HttpGet("ObterPorId")]
+        [HttpGet("ObterPorId/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObterPorId(int id)
         {
             var admino = await admin.ObterPorId(id);
-            if (admino.Id <= 0 || admino == null)
-                return NotFound("Insira um Id Valido");
+            if ( admino == null || admino.Id <= 0)
+                return NotFound("Nenhum admin encontrado");
             return Ok(admino);
 
         }
         [HttpGet("ObterTodos")]
-        public async Task<IActionResult> ObterTodos()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> ObterTodos([FromQuery] PaginationParams paginationParams)
         {
-            var admins = await admin.ObterTodosAsync();
+            var admins = await admin.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
+            if(admins == null || !admins.Any())
+                return NotFound("Nenhum admin encontrado");
+
+            Response.AddPaginationHeader(new PaginationHeader
+                (
+                admins.CurrentPage,
+                admins.Pagesize,
+                admins.TotalCount,
+                admins.TotalPages
+
+
+                ));
             return Ok(admins);
         }
 

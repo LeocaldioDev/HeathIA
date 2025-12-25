@@ -1,11 +1,15 @@
 ﻿using Google.GenAI;
 using Google.GenAI.Types;
+using HealthIA.API.Extensions;
+using HealthIA.API.Models;
 using HealthIA.Application.DTOs;
 using HealthIA.Application.IGemini;
 using HealthIA.Application.Interfaces;
 using HealthIA.Application.Services;
+using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
 using HealthIA.Infra.Ioc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthIA.API.Controllers
@@ -23,14 +27,15 @@ namespace HealthIA.API.Controllers
 
         public ConsultaController(IConsultaService _consultaService, IUsuarioService _usuarioService, Google.GenAI.Client genClient,IGeminiService gemini)
         {
-            consultaService = _consultaService;
-            usuarioService = _usuarioService;
-            _genClient = genClient;
-            geminiService = gemini;
+            this.consultaService = _consultaService;
+            this.usuarioService = _usuarioService;
+            this._genClient = genClient;
+            this.geminiService = gemini;
 
         }
 
         [HttpPost("Incluir")]
+        [Authorize(Roles = "Paciente")]
         public async Task<IActionResult> Incluir(ConsultaDTO consultadto)
         {
             if (consultadto.Sintomas == null)
@@ -52,6 +57,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPut("Alterar")]
+        [Authorize(Roles = "Medico,Admin")]
         public async Task<IActionResult> Alterar(ConsultaDTO consultadto)
         {
             var consulta = await consultaService.ObterPorIdsempost(consultadto.Id);
@@ -63,7 +69,8 @@ namespace HealthIA.API.Controllers
         }
 
 
-        [HttpDelete("Excluir")]
+        [HttpDelete("Excluir/{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Excluir(int id)
         {
             var consulta = await consultaService.ObterPorId(id);
@@ -73,21 +80,35 @@ namespace HealthIA.API.Controllers
             return Ok("Consulta Excluida com Sucesso");
         }
 
-        [HttpGet("ObterPorId")]
+        [HttpGet("ObterPorId/{id:int}")]
+        [Authorize(Roles = "Medico,Admin")]
         public async Task<IActionResult> ObterPorId(int id)
         {
             var consulta = await consultaService.ObterPorId(id);
-            if (consulta.Id <= 0 || consulta ==null)
-                return NotFound("Insira um Id Valido");
+            if (consulta ==null|| consulta.Id <= 0)
+                return NotFound("Nenhuma consulta encontrada");
             
             return Ok(consulta);
         }
 
 
         [HttpGet("ObterTodos")]
-        public async Task<IActionResult> ObterTodos()
+        [Authorize(Roles = "Medico,Admin")]
+        public async Task<IActionResult> ObterTodos([FromQuery]PaginationParams paginationParams)
         {
-            var consultas = await consultaService.ObterTodosAsync();
+            var consultas = await consultaService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
+            if (consultas == null || !consultas.Any())
+                return NotFound("Nenhuma consulta encontrada");
+
+            Response.AddPaginationHeader(new PaginationHeader
+                (
+                consultas.CurrentPage,
+                consultas.Pagesize,
+                consultas.TotalCount,
+                consultas.TotalPages
+
+
+                )); 
             return Ok(consultas);
         }
 

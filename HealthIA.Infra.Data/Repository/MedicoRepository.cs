@@ -1,6 +1,8 @@
 ﻿using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using HealthIA.Infra.Data.Context;
+using HealthIA.Infra.Data.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -41,7 +43,7 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Medico> Excluir(int medico)
         {
-            var medicoid = _context.Medicos.Find(medico);
+            var medicoid = await _context.Medicos.FindAsync(medico);
             _context.Medicos.Remove(medicoid);
             await _context.SaveChangesAsync();
             return medicoid;
@@ -56,14 +58,14 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Medico> ObterPorId(int id)
         {
-            var medico = await _context.Medicos.FirstAsync();
+            var medico = await _context.Medicos.FirstOrDefaultAsync(x => x.Id == id);
             return medico;
         }
 
-        public async Task<IEnumerable<Medico>> ObterTodosAsync()
+        public async Task<PagedList<Medico>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-            var medicos = await _context.Medicos.ToListAsync();
-            return medicos;
+            var query = _context.Medicos.AsQueryable();
+            return await PaginationHelper.CreateAsync<Medico>(query, PageNumber, PageSize);
         }
     }
 }

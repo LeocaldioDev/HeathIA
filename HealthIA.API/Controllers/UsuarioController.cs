@@ -1,10 +1,12 @@
-﻿using HealthIA.API.Models;
+﻿using HealthIA.API.Extensions;
+using HealthIA.API.Models;
 using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
 using HealthIA.Application.Services;
 using HealthIA.Domain.Account;
 using HealthIA.Domain.Entities;
 using HealthIA.Infra.Ioc;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -26,7 +28,7 @@ namespace HealthIA.API.Controllers
 
 
         [HttpPost ("Register")]
-        public async Task<ActionResult<UserToken>> Incluir(UsuarioDTO user)
+        public async Task<ActionResult<UserToken>> Incluir(UsuarioregisterDTO user)
         {
 
             if (user == null)
@@ -108,10 +110,17 @@ namespace HealthIA.API.Controllers
         }
 
 
+        [HttpPost("logout")]
+        [Authorize]
+        public IActionResult Logout()
+        {
+
+            return NoContent(); 
+        }
 
 
-
-        [HttpDelete]
+        [HttpDelete("Excluir/{id:int}")]
+        [Authorize]
         public async Task<ActionResult> Excluir(int id)
         {
             //if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
@@ -119,12 +128,12 @@ namespace HealthIA.API.Controllers
             //    return Unauthorized("Acesso negado");
             //}
 
-            //var usuarioId = User.GetId();
-            //var usuarioLogado = await _usuarioService.ObterPorId(usuarioId);
-            //if (usuarioLogado == null || usuarioLogado.IsAdmin != "admin")
-            //{
-            //    return Unauthorized("Voce não tem permissão para excluir usuarios");
-            //}
+            var usuarioId = User.GetId();
+            var usuarioLogado = await _usuarioService.ObterPorId(usuarioId);
+            if (usuarioLogado == null || usuarioLogado.Role!= UserRole.Admin)
+            {
+                return Unauthorized("Voce não tem permissão para excluir usuarios");
+            }
 
             var usuarioExcluido = await _usuarioService.Excluir(id);
             if (usuarioExcluido == null)
@@ -137,24 +146,25 @@ namespace HealthIA.API.Controllers
 
 
         [HttpPut("Alterar")]
-        public async Task<ActionResult> Alterar(UsuarioDTO usuarioPutDTO)
+        [Authorize]
+        public async Task<ActionResult> Alterar(UsuarioPostDTO usuarioPutDTO)
         {
-            //if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
-            //{
-            //    return Unauthorized("Acesso negado");
-            //}
+            if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            {
+                return Unauthorized("Acesso negado");
+            }
 
-            //var usuarioId = User.GetId();
-            //var usuarioLogado = await _usuarioService.ObterPorId(usuarioId);
+            var usuarioId = User.GetId();
+            var usuarioLogado = await _usuarioService.ObterPorId(usuarioId);
 
-            //if (usuarioLogado.IsAdmin != "admin" && usuarioLogado.Id != usuarioPutDTO.Id)
-            //{
-            //    return Unauthorized("Voce não tem permissão para alterar este usuario");
-            //}
-            //if (usuarioLogado.IsAdmin !="admin" && usuarioPutDTO.Id == usuarioId && usuarioPutDTO.IsAdmin == "admin")
-            //{
-            //    return Unauthorized("Voce não tem permissão para se definir como administrador");
-            //}
+            if (usuarioLogado.Role != UserRole.Admin && usuarioLogado.Id != usuarioPutDTO.Id)
+            {
+                return Unauthorized("Voce não tem permissão para alterar este usuario");
+            }
+            if (usuarioLogado.Role != UserRole.Admin && usuarioPutDTO.Id == usuarioId && usuarioPutDTO.Role == UserRole.Admin)
+            {
+                return Unauthorized("Voce não tem permissão para se definir como administrador");
+            }
 
             var usuarioAlterado = await _usuarioService.Alterar(usuarioPutDTO);
             if (usuarioAlterado == null)
@@ -168,7 +178,8 @@ namespace HealthIA.API.Controllers
 
 
 
-        [HttpGet("ObterPorId")]
+        [HttpGet("ObterPorId/{id:int}")]
+        [Authorize]
         public async Task<ActionResult> GetById(int id)
         {
             if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
@@ -201,19 +212,26 @@ namespace HealthIA.API.Controllers
 
         }
 
-
-
-
-
-
-
         [HttpGet("ObterTodos")]
-        public async Task<ActionResult> GetAll()
+        [Authorize]
+        public async Task<ActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
-            var usuarios = await _usuarioService.ObterTodosAsync();
+            var usuarios = await _usuarioService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
+            if (usuarios == null || !usuarios.Any())
+            {
+                return NotFound("Nenhum usuario encontrado");
+            }
+            Response.AddPaginationHeader(new PaginationHeader
+                (
+                usuarios.CurrentPage,
+                usuarios.Pagesize,
+                usuarios.TotalCount,
+                usuarios.TotalPages
+                
+                
+                ));
             return Ok(usuarios);
         }
     }
 
     }
-    

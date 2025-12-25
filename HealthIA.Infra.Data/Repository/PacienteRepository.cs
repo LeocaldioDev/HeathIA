@@ -1,6 +1,8 @@
 ﻿using HealthIA.Domain.Entities;
 using HealthIA.Domain.Interface;
+using HealthIA.Domain.Pagination;
 using HealthIA.Infra.Data.Context;
+using HealthIA.Infra.Data.Helper;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,7 +19,7 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Paciente> Alterar(Paciente paciente)
         {
-            var pacienteexistente = _context.Pacientes.Find(paciente.Id);
+            var pacienteexistente = await _context.Pacientes.FindAsync(paciente.Id);
             _context.Pacientes.Update(pacienteexistente);
             await _context.SaveChangesAsync();
             return pacienteexistente;
@@ -25,7 +27,7 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Paciente> Excluir(int paciente)
         {
-            var pacienteid = _context.Pacientes.Find(paciente);
+            var pacienteid = await _context.Pacientes.FindAsync(paciente);
             _context.Pacientes.Remove(pacienteid);
             await _context.SaveChangesAsync();
             return pacienteid;
@@ -38,16 +40,16 @@ namespace HealthIA.Infra.Data.Repository
             return clientenovo.Entity;
         }
 
-        public async Task<Paciente> ObterPorId(int id)
+        public async Task<Paciente?> ObterPorId(int id)
         {
-            var paciente =  await  _context.Pacientes.Include(c => c.Consultas).FirstAsync();
+            var paciente =  await  _context.Pacientes.Include(c => c.Consultas).FirstOrDefaultAsync(x => x.Id == id);
             return paciente;
         }
 
-        public async Task<IEnumerable<Paciente>> ObterTodosAsync()
+        public async Task<PagedList<Paciente>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-           var pacientes = await _context.Pacientes.Include(c=>c.Consultas).ToListAsync();
-              return pacientes;
+            var query = _context.Pacientes.AsQueryable();
+            return await PaginationHelper.CreateAsync<Paciente>(query, PageNumber, PageSize);
         }
     }
 }

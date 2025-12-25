@@ -1,13 +1,16 @@
-﻿using HealthIA.Application.DTOs;
+﻿using HealthIA.API.Extensions;
+using HealthIA.API.Models;
+using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
 using HealthIA.Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthIA.API.Controllers
 {
     [ApiController]
     [Route("Api/[controller]")]
-    public class PacienteController : Controller
+    public class PacienteController : ControllerBase
     {
         private readonly IPacienteService pacienteService;
 
@@ -27,6 +30,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPut("Alterar")]
+        [Authorize(Roles = "Medico,Admin")]
         public async Task<IActionResult> Alterar(PacienteDTO pacienteDTO)
         {
             var pacienteexiste= await pacienteService.ObterPorId(pacienteDTO.Id);
@@ -36,29 +40,44 @@ namespace HealthIA.API.Controllers
             return Ok(pacienteexiste);
         }
 
-        [HttpDelete("Excluir")]
+        [HttpDelete("Excluir/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Excluir(int id)
         {
            var  paciente = await pacienteService.ObterPorId(id);
-            if (paciente.Id <= 0 || paciente == null)
+            if ( paciente == null|| paciente.Id <= 0)
                 return NotFound("Insira um Id Valido");
             await pacienteService.Excluir(paciente.Id);
             return Ok("Paciente Excluido com Sucesso");
         }
 
-        [HttpGet("ObterPorId")]
+        [HttpGet("ObterPorId/{id:int}")]
+        [Authorize(Roles = "Medico,Admin")]
         public async Task<IActionResult> ObterPorId(int id)
         {
             var paciente = await pacienteService.ObterPorIdPost(id);
-            if (paciente.Id <= 0 || paciente == null)
-                return NotFound("Insira um Id Valido");
+            if ( paciente == null|| paciente.Id <= 0)
+                return NotFound("Paciente não encontrado");
             return Ok(paciente);
 
         }
         [HttpGet("ObterTodos")]
-        public async Task<IActionResult> ObterTodos()
+        [Authorize(Roles = "Medico,Admin")]
+        public async Task<IActionResult> ObterTodos([FromQuery] PaginationParams paginationParams)
         {
-            var pacientes = await pacienteService.ObterTodosAsync();
+            var pacientes = await pacienteService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
+            if (pacientes == null ||!pacientes.Any())
+                return NotFound("Nenhum paciente encontrado");
+
+            Response.AddPaginationHeader(new PaginationHeader
+                (
+                pacientes.CurrentPage,
+                pacientes.Pagesize,
+                pacientes.TotalCount,
+                pacientes.TotalPages
+
+
+                ));
             return Ok(pacientes);
         }
 

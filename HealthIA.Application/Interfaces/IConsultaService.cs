@@ -1,5 +1,6 @@
 ﻿using HealthIA.Application.DTOs;
 using HealthIA.Domain.Entities;
+using HealthIA.Domain.Pagination;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,6 +14,6 @@ namespace HealthIA.Application.Interfaces
         Task<ConsultaPostDTO> Excluir(int consulta);
         Task<ConsultaPostDTO> ObterPorId(int id);
         Task<ConsultaPostDTO> ObterPorIdsempost(int id);
-        Task<IEnumerable<ConsultaPostDTO>> ObterTodosAsync();
+        Task<PagedList<ConsultaPostDTO>> ObterTodosAsync(int PageNumber, int PageSize);
     }
 }
