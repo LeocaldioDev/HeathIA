@@ -7,5 +7,7 @@ namespace HealthIA.API.Models
         public string Token { get; set; }
         public UserRole Role { get; set; }
         public string email { get; set; }
+
+        public int idElement { get; set; }
     }
 }

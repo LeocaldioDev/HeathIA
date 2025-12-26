@@ -69,16 +69,40 @@ namespace HealthIA.Application.Services
         {
             var usuario =await  _usuarioRepository.ObterPorId(id);
             var usuarioDto = mapper.Map<UsuarioDTO>(usuario);
-            return usuarioDto;
+            return new UsuarioDTO
+            {
+                Id = usuario.Id,
+                Email = usuario.Email,
+                Role = usuario.Role,
+                Pacienteid = usuario.Paciente?.Id,
+                medicoid = usuario.medico?.Id,
+                adminid = usuario.admin?.Id
+            };
         }
 
-        public async Task<PagedList<UsuarioDTO>> ObterTodosAsync(int PageNumber, int PageSize)
+        public async Task<PagedList<UsuarioDTO>> ObterTodosAsync(int pageNumber, int pageSize)
         {
-           var Usuarios = await _usuarioRepository.ObterTodosAsync(PageNumber, PageSize);
-            var usuarioDtos = mapper.Map<IEnumerable<UsuarioDTO>>(Usuarios);
-            return new PagedList<UsuarioDTO>(usuarioDtos, PageNumber, PageSize, Usuarios.TotalCount);
+            var usuarios = await _usuarioRepository.ObterTodosAsync(pageNumber, pageSize);
+
+            var usuariosDto = usuarios.Select(usuario => new UsuarioDTO
+            {
+                Id = usuario.Id,
+                Email = usuario.Email,
+                Role = usuario.Role,
+                adminid = usuario.admin?.Id,
+                medicoid = usuario.medico?.Id,
+                Pacienteid = usuario.Paciente?.Id
+            });
+
+            return new PagedList<UsuarioDTO>(
+                usuariosDto,
+                pageNumber,
+                pageSize,
+                usuarios.TotalCount
+            );
         }
 
-       
+
+
     }
 }

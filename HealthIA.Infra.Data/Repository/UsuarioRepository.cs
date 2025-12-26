@@ -57,6 +57,8 @@ namespace HealthIA.Infra.Data.Repository
         {
             return await _context.Usuarios
                 .Include(u => u.Paciente)
+                .Include(u => u.medico)
+                .Include(u => u.admin)
                 .FirstOrDefaultAsync(u => u.Id == id);
         }
 
@@ -64,7 +66,11 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<PagedList<Usuario>> ObterTodosAsync(int PageNumber, int PageSize)
         {
-            var query = _context.Usuarios.AsQueryable();
+            var query = _context.Usuarios
+                .Include(u => u.Paciente)
+                .Include(u => u.medico)
+                .Include(u => u.admin)
+                .AsQueryable();
             return await PaginationHelper.CreateAsync<Usuario>(query, PageNumber, PageSize);
         }
 

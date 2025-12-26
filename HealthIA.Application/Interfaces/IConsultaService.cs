@@ -14,6 +14,6 @@ namespace HealthIA.Application.Interfaces
         Task<ConsultaPostDTO> Excluir(int consulta);
         Task<ConsultaPostDTO> ObterPorId(int id);
         Task<ConsultaPostDTO> ObterPorIdsempost(int id);
-        Task<PagedList<ConsultaPostDTO>> ObterTodosAsync(int PageNumber, int PageSize);
+        Task<PagedList<ConsultaPostDTO>> ObterTodosAsync(int idPaciente,int PageNumber, int PageSize);
     }
 }

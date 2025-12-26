@@ -49,9 +49,9 @@ namespace HealthIA.Infra.Data.Repository
             return consulta;
         }
 
-        public async Task<PagedList<Consulta>> ObterTodosAsync(int PageNumber, int PageSize)
+        public async Task<PagedList<Consulta>> ObterTodosAsync(int idPaciente, int PageNumber, int PageSize)
         {
-            var query = _context.Consultas.AsQueryable();
+            var query = _context.Consultas.AsQueryable().Where(x =>x.PacienteId == idPaciente);
             return await PaginationHelper.CreateAsync<Consulta>(query, PageNumber, PageSize);
         }
     }

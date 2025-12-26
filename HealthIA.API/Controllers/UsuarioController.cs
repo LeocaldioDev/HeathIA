@@ -65,7 +65,7 @@ namespace HealthIA.API.Controllers
                     return BadRequest("Ocorreu um erro ao cadastrar");
                 }
 
-                var token = _Authenticateservice.GenerateToken(usuario.Id, usuario.Email, usuario.Role);
+                    var token = _Authenticateservice.GenerateToken(usuario.Id, usuario.Email, usuario.Role);
 
                 return new UserToken
                 {
@@ -93,14 +93,32 @@ namespace HealthIA.API.Controllers
                 return Unauthorized("Usuario ou senha invalida");
             }
             var usuario = await _Authenticateservice.GetUserByEmail(loginModel.Email);
+            int IdElement = 0;
+            if (usuario.Role == UserRole.Admin)
+            {
+                IdElement = usuario.admin.Id;
+            }
+            else if (usuario.Role == UserRole.Medico)
+            {
+                IdElement = usuario.medico.Id;
+            }
+            else if(usuario.Role == UserRole.Paciente)
+            {
+                IdElement = usuario.Paciente.Id;
+            }
+            else
+            {
+                IdElement = 0;
+            }
 
-            var token = _Authenticateservice.GenerateToken(usuario.Id, usuario.Email,usuario.Role);
+            var token = _Authenticateservice.GenerateToken(usuario.Id, usuario.Email, usuario.Role);
 
             return new UserToken
             {
                 Token = token,
                 Role = usuario.Role,
-                email = usuario.Email
+                email = usuario.Email,
+                idElement = IdElement
             };
         }
 

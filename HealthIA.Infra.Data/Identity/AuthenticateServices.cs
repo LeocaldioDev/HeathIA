@@ -38,7 +38,7 @@ namespace HealthIA.Infra.Data.Identity
 
 
 
-        public string GenerateToken(int id, string email,UserRole role)
+        public string GenerateToken(int id,string email,UserRole role)
         {
             var Claims = new[]
             {
@@ -68,7 +68,11 @@ namespace HealthIA.Infra.Data.Identity
 
         public async Task<Usuario> GetUserByEmail(string email)
         {
-            return await _context.Usuarios.Where(x => x.Email.ToLower() == email.ToLower()).FirstOrDefaultAsync();
+            return await _context.Usuarios
+        .Include(u => u.Paciente)
+        .Include(u => u.medico)
+        .Include(u => u.admin)
+        .FirstOrDefaultAsync(u => u.Email == email);
         }
 
         public async Task<bool> UserExists(string email)
@@ -78,5 +82,7 @@ namespace HealthIA.Infra.Data.Identity
                 return false;
             return true;
         }
+
+       
     }
 }

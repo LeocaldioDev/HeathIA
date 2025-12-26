@@ -12,7 +12,7 @@ namespace HealthIA.Domain.Interface
      Task<Consulta> Alterar(Consulta consulta);
         Task<Consulta> Excluir(int consulta);
         Task<Consulta> ObterPorId(int id);
-        Task<PagedList<Consulta>> ObterTodosAsync(int PageNumber, int PageSize);
+        Task<PagedList<Consulta>> ObterTodosAsync(int idPaciente, int PageNumber, int PageSize);
 
 
     }

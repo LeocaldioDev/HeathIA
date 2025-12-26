@@ -56,9 +56,9 @@ namespace HealthIA.Application.Services
             return clienteDto;
         }
 
-        public async Task<PagedList<ConsultaPostDTO>> ObterTodosAsync(int PageNumber, int PageSize)
+        public async Task<PagedList<ConsultaPostDTO>> ObterTodosAsync(int idpaciente,int PageNumber, int PageSize)
         {
-            var consultaa = await _consultaRepository.ObterTodosAsync(PageNumber,PageSize);
+            var consultaa = await _consultaRepository.ObterTodosAsync(idpaciente, PageNumber,PageSize);
             var clienteDto = mapper.Map<IEnumerable<ConsultaPostDTO>>(consultaa);
             return new PagedList<ConsultaPostDTO>(clienteDto, PageNumber, PageSize, consultaa.TotalCount);
         }

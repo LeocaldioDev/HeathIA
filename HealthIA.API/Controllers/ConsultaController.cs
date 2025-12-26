@@ -50,7 +50,7 @@ namespace HealthIA.API.Controllers
             consultadto.DataConsulta = DateTime.UtcNow;
             var usuarioId = User.GetId();
             var usuario = await usuarioService.ObterPorId(usuarioId);
-            consultadto.PacienteId = usuario.Paciente.Id;
+            consultadto.PacienteId =(int) usuario.Pacienteid;
 
             var consulta = await consultaService.Incluir(consultadto);
             return Ok(consulta);
@@ -94,9 +94,9 @@ namespace HealthIA.API.Controllers
 
         [HttpGet("ObterTodos")]
         [Authorize(Roles = "Medico,Admin")]
-        public async Task<IActionResult> ObterTodos([FromQuery]PaginationParams paginationParams)
+        public async Task<IActionResult> ObterTodos([FromQuery] PaginationParamsConsulta paginationParams)
         {
-            var consultas = await consultaService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
+            var consultas = await consultaService.ObterTodosAsync(paginationParams.PacienteId,paginationParams.PageNumber,paginationParams.PageSize);
             if (consultas == null || !consultas.Any())
                 return NotFound("Nenhuma consulta encontrada");
 
@@ -111,6 +111,7 @@ namespace HealthIA.API.Controllers
                 )); 
             return Ok(consultas);
         }
+
 
     }
     }

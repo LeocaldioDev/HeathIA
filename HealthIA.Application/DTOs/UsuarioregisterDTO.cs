@@ -19,7 +19,7 @@ namespace HealthIA.Application.DTOs
         [JsonIgnore]
         public UserRole Role { get; set; }
         public string password { get; set; }
-        
+
 
     }
 }

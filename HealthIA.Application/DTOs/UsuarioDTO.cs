@@ -20,14 +20,11 @@ namespace HealthIA.Application.DTOs
         public UserRole Role { get; set; }
         public string password { get; set; }
         [NotMapped]
-        [JsonIgnore]
-        public Paciente Paciente { get;  set; }
-        [NotMapped]
-        [JsonIgnore]
-        public Admin admin { get;  set; }
-        [NotMapped]
-        [JsonIgnore]
-        public Medico medico { get;  set; }
+        public int? Pacienteid { get;  set; }
+        
+        public int? adminid { get;  set; }
+      
+        public int? medicoid { get;  set; }
 
     }
 }
