@@ -94,7 +94,7 @@ namespace HealthIA.API.Controllers
 
         [HttpGet("ObterTodos")]
         [Authorize(Roles = "Medico,Admin")]
-        public async Task<IActionResult> ObterTodos(PaginationParams paginationParams)
+        public async Task<IActionResult> ObterTodos([FromQuery]PaginationParams paginationParams)
         {
             var consultas = await consultaService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
             if (consultas == null || !consultas.Any())
