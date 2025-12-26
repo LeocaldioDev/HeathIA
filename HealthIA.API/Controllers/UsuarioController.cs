@@ -42,12 +42,7 @@ namespace HealthIA.API.Controllers
             {
                 return BadRequest("este email ja possui um cadastro");
             }
-            var existeUsuariocadastrado = await _usuarioService.ExisteUsuarioCadastradoAsync();
-
-            if(!existeUsuariocadastrado)
-            {
-                user.Role = UserRole.Admin;
-            }
+            
             else
             {
                 if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
@@ -214,7 +209,7 @@ namespace HealthIA.API.Controllers
 
         [HttpGet("ObterTodos")]
         [Authorize]
-        public async Task<ActionResult> GetAll([FromQuery] PaginationParams paginationParams)
+        public async Task<ActionResult> GetAll(PaginationParams paginationParams)
         {
             var usuarios = await _usuarioService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
             if (usuarios == null || !usuarios.Any())

@@ -41,6 +41,7 @@ namespace HealthIA.Application.GeminiService
         - Não forneça medicação controlada
         - Seja claro e objetivo
         -e seja curto e objectivo, nada de muito texto
+        - nada de caracteres como asterisitcos ou coisas assim, o texto tem que vir puto porque vai direito para um front end
         """;
 
             try

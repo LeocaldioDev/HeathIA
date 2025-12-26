@@ -38,12 +38,12 @@ namespace HealthIA.API.Controllers
 
 
         [HttpPost("admin")]
-       [Authorize(Roles = "Admin")]
+      // [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserToken>> CadastrarAdmin(
      [FromBody] CadastroAdminModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
 
             var emailExiste = await _Authenticateservice.UserExists(model.Email);
             if (emailExiste)
@@ -90,8 +90,8 @@ namespace HealthIA.API.Controllers
         public async Task<ActionResult<UserToken>> CadastrarPaciente(
             [FromBody] cadastroPacienteModel user)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
 
             var emailExiste = await _Authenticateservice.UserExists(user.Email);
             if (emailExiste)
@@ -132,8 +132,8 @@ namespace HealthIA.API.Controllers
         public async Task<ActionResult<UserToken>> CadastrarMedico(
       [FromBody] CadastroMedicoModel model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            //if (!ModelState.IsValid)
+            //    return BadRequest(ModelState);
 
             var emailExiste = await _Authenticateservice.UserExists(model.Email);
             if (emailExiste)

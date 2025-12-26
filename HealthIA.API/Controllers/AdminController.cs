@@ -65,7 +65,7 @@ namespace HealthIA.API.Controllers
         }
         [HttpGet("ObterTodos")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> ObterTodos([FromQuery] PaginationParams paginationParams)
+        public async Task<IActionResult> ObterTodos(PaginationParams paginationParams)
         {
             var admins = await admin.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);
             if(admins == null || !admins.Any())
