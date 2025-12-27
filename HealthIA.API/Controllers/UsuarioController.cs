@@ -136,10 +136,10 @@ namespace HealthIA.API.Controllers
         [Authorize]
         public async Task<ActionResult> Excluir(int id)
         {
-            //if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
-            //{
-            //    return Unauthorized("Acesso negado");
-            //}
+            if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            {
+                return Unauthorized("Acesso negado");
+            }
 
             var usuarioId = User.GetId();
             var usuarioLogado = await _usuarioService.ObterPorId(usuarioId);
