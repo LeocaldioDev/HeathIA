@@ -30,7 +30,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPut("Alterar")]
-        [Authorize(Roles = "Medico,Admin")]
+        [Authorize]
         public async Task<IActionResult> Alterar(PacienteDTO pacienteDTO)
         {
             var pacienteexiste= await pacienteService.ObterPorId(pacienteDTO.Id);
@@ -52,7 +52,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpGet("ObterPorId/{id:int}")]
-        [Authorize(Roles = "Medico,Admin")]
+        [Authorize]
         public async Task<IActionResult> ObterPorId(int id)
         {
             var paciente = await pacienteService.ObterPorIdPost(id);
@@ -61,6 +61,7 @@ namespace HealthIA.API.Controllers
             return Ok(paciente);
 
         }
+
         [HttpGet("ObterTodos")]
         [Authorize(Roles = "Medico,Admin")]
         public async Task<IActionResult> ObterTodos([FromQuery] PaginationParams paginationParams)

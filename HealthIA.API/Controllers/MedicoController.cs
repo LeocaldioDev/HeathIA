@@ -21,6 +21,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPost("Incluir")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Incluir(MedicoDTO medicoDTO)
         {
             if (medicoDTO == null)
@@ -31,6 +32,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPut("Alterar")]
+        [Authorize(Roles = "Admin,Medico")]
         public async Task<IActionResult> Alterar(MedicoDTO medicoDTO)
         {
             var medicoexiste = await medico.ObterPorId(medicoDTO.Id);
