@@ -19,7 +19,8 @@ namespace HealthIA.Application.DTOs
         [Required(ErrorMessage = "O Sexo é obrigatório!")]
         public string Sexo { get; set; }
         public string Telefone { get; set; }
-        
+
+        public int UsuarioId { get; set; }
 
         public ICollection<Consulta> Consultas { get; private set; } = new List<Consulta>();
     }

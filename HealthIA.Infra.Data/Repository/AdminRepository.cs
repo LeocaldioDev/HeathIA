@@ -19,10 +19,14 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Admin> Alterar(Admin admin)
         {
-            var adminexistente =await  _context.Admins.FindAsync(admin.Id);
-            _context.Admins.Update(adminexistente);
+            var local = _context.Admins.Local.FirstOrDefault(x => x.Id == admin.Id);
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            _context.Admins.Update(admin);
             await _context.SaveChangesAsync();
-            return adminexistente;
+            return admin;
         }
 
         public async Task<Admin> Excluir(int admin)

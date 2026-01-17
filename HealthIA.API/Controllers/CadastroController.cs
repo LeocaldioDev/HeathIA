@@ -12,7 +12,7 @@ using System.Security.Claims;
 namespace HealthIA.API.Controllers
 {
     [ApiController]
-    [Route ("Api/[Controller]")]
+    [Route("api/[controller]")]
     public class CadastroController : ControllerBase
     {
 

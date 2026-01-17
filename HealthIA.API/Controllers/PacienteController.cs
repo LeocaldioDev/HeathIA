@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HealthIA.API.Controllers
 {
     [ApiController]
-    [Route("Api/[controller]")]
+    [Route("api/[controller]")]
     public class PacienteController : ControllerBase
     {
         private readonly IPacienteService pacienteService;
@@ -36,8 +36,8 @@ namespace HealthIA.API.Controllers
             var pacienteexiste= await pacienteService.ObterPorId(pacienteDTO.Id);
             if (pacienteexiste == null || pacienteexiste.Id <= 0)
                 return NotFound("Insira um usuario Valido");
-            await pacienteService.Alterar(pacienteexiste);
-            return Ok(pacienteexiste);
+            await pacienteService.Alterar(pacienteDTO);
+            return Ok(pacienteDTO);
         }
 
         [HttpDelete("Excluir/{id:int}")]

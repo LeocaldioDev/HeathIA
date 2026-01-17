@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HealthIA.API.Controllers
 {
     [ApiController]
-    [Route("Api/[controller]")]
+    [Route("api/[controller]")]
     public class ConsultaController : Controller
     {
         private readonly Client _genClient;
@@ -58,13 +58,13 @@ namespace HealthIA.API.Controllers
 
         [HttpPut("Alterar")]
         [Authorize]
-        public async Task<IActionResult> Alterar(ConsultaDTO consultadto)
+        public async Task<IActionResult> Alterar(ConsultaPostDTO consultadto)
         {
             var consulta = await consultaService.ObterPorIdsempost(consultadto.Id);
             if (consulta == null || consulta.Id <= 0)
                 return BadRequest("Insira dados validos para a consulta");
-            await consultaService.Alterar(consulta);
-            return Ok(consulta);
+            await consultaService.Alterar(consultadto);
+            return Ok(consultadto);
 
         }
 
@@ -93,7 +93,7 @@ namespace HealthIA.API.Controllers
 
 
         [HttpGet("ObterTodos")]
-        [Authorize(Roles = "Medico,Admin")]
+        [Authorize]
         public async Task<IActionResult> ObterTodos([FromQuery] PaginationParamsConsulta paginationParams)
         {
             var consultas = await consultaService.ObterTodosAsync(paginationParams.PacienteId,paginationParams.PageNumber,paginationParams.PageSize);

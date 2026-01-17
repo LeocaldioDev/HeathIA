@@ -24,6 +24,7 @@ public class Consulta
     {
         DomainExceptionValidation.When(id < 0, "Id da consulta inválido.");
         Id = id;
+        Validacaomedica = validacaomedica;
         Validacao(sintomas, diagnosticoIA, dataConsulta, pacienteId);
     }
 
@@ -32,7 +33,7 @@ public class Consulta
             Validacaomedica = validacao;
         }
 
-        public Consulta(string sintomas, string diagnosticoIA, DateTime dataConsulta, int pacienteId, bool validacaomedica)
+        public Consulta(string sintomas, string diagnosticoIA, DateTime dataConsulta, int pacienteId)
     {
         Validacao(sintomas, diagnosticoIA, dataConsulta, pacienteId);
     }
@@ -48,7 +49,6 @@ public class Consulta
         DiagnosticoIA = diagnosticoIA;
         DataConsulta = dataConsulta;
         PacienteId = pacienteId;
-        Validacaomedica = false;
     }
     }
 }

@@ -37,8 +37,8 @@ namespace HealthIA.API.Controllers
             var adminexiste = await admin.ObterPorId(adminDTO.Id);
             if ( adminexiste == null|| adminexiste.Id <= 0)
                 return NotFound("Insira um usuario Valido");
-            await admin.Alterar(adminexiste);
-            return Ok(adminexiste);
+            await admin.Alterar(adminDTO);
+            return Ok(adminDTO);
         }
 
 

@@ -38,8 +38,8 @@ namespace HealthIA.API.Controllers
             var medicoexiste = await medico.ObterPorId(medicoDTO.Id);
             if (medicoexiste == null || medicoexiste.Id <= 0)
                 return NotFound("Insira um usuario Valido");
-            await medico.Alterar(medicoexiste);
-            return Ok(medicoexiste);
+            await medico.Alterar(medicoDTO);
+            return Ok(medicoDTO);
         }
 
         [HttpDelete("Excluir/{id:int}")]

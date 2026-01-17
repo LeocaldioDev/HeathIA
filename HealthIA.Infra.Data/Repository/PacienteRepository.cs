@@ -19,10 +19,14 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Paciente> Alterar(Paciente paciente)
         {
-            var pacienteexistente = await _context.Pacientes.FindAsync(paciente.Id);
-            _context.Pacientes.Update(pacienteexistente);
+            var local = _context.Pacientes.Local.FirstOrDefault(x => x.Id == paciente.Id);
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            _context.Pacientes.Update(paciente);
             await _context.SaveChangesAsync();
-            return pacienteexistente;
+            return paciente;
         }
 
         public async Task<Paciente> Excluir(int paciente)

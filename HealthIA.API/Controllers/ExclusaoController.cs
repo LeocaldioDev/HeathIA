@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace HealthIA.API.Controllers
 {
     [ApiController]
-    [Route("Api/[Controller]")]
+    [Route("api/[controller]")]
     public class ExclusaoController : ControllerBase
     {
         private readonly IPacienteService _pacienteService;

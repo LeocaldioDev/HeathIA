@@ -13,7 +13,7 @@ using System.Security.Claims;
 namespace HealthIA.API.Controllers
 {
     [ApiController]
-    [Route("Api/[controller]")]
+    [Route("api/[controller]")]
     public class UsuarioController : Controller
     {
         private readonly IUsuarioService _usuarioService;

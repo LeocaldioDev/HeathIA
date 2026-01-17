@@ -19,12 +19,14 @@ namespace HealthIA.Infra.Data.Repository
         }
         public async Task<Consulta> Alterar(Consulta consulta)
         {
-            var consultaId = await _context.Consultas.FindAsync(consulta.Id);
-            _context.Consultas.Update(consultaId);
+            var local = _context.Consultas.Local.FirstOrDefault(x => x.Id == consulta.Id);
+            if (local != null)
+            {
+                _context.Entry(local).State = EntityState.Detached;
+            }
+            _context.Consultas.Update(consulta);
             await _context.SaveChangesAsync();
-            return consultaId;
-
-
+            return consulta;
         }
 
         public async  Task<Consulta> Excluir(int consulta)

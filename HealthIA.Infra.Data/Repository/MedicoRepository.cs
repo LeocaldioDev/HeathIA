@@ -21,23 +21,16 @@ namespace HealthIA.Infra.Data.Repository
 
         public async Task<Medico> Alterar(Medico medico)
         {
-
-            var medicoExistente = await _context.Medicos.FindAsync(medico.Id);
-            if (medicoExistente == null)
-                throw new Exception("Médico não encontrado.");
-            if (!string.IsNullOrWhiteSpace(medico.Nome) && medico.Nome != medicoExistente.Nome)
+            var local = _context.Medicos.Local.FirstOrDefault(x => x.Id == medico.Id);
+            if (local != null)
             {
-                medicoExistente.validacao(medico.Nome); 
+                _context.Entry(local).State = EntityState.Detached;
             }
 
-            if (medico.UsuarioId > 0 && medico.UsuarioId != medicoExistente.UsuarioId)
-            {
-                medicoExistente.setUsuarioID(medico.UsuarioId);
-            }
-
+            _context.Medicos.Update(medico);
             await _context.SaveChangesAsync();
 
-            return medicoExistente;
+            return medico;
         }
 
 

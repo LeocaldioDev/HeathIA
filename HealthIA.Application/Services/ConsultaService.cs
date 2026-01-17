@@ -13,7 +13,7 @@ namespace HealthIA.Application.Services
     public class ConsultaService : IConsultaService
     {
         private readonly IConsultaRepository _consultaRepository;
-        private readonly IMapper mapper;
+        private readonly IMapper mapper;    
         public ConsultaService(IConsultaRepository consultaRepository, IMapper mapper)
         {
             _consultaRepository = consultaRepository;
