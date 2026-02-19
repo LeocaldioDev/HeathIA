@@ -24,7 +24,7 @@ namespace HealthIA.Infra.Ioc
         {
 
 
-            services.AddDbContext<AppDataBase>(c => c.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
+            services.AddDbContext<AppDataBase>(c => c.UseNpgsql(configuration.GetConnectionString("DefaultConnection"),
                 b => b.MigrationsAssembly(typeof(AppDataBase).Assembly.FullName)));
 
 

@@ -133,20 +133,20 @@ namespace HealthIA.API.Controllers
 
 
         [HttpDelete("Excluir/{id:int}")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> Excluir(int id)
         {
-            if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
-            {
-                return Unauthorized("Acesso negado");
-            }
+            //if (User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            //{
+            //    return Unauthorized("Acesso negado");
+            //}
 
-            var usuarioId = User.GetId();
-            var usuarioLogado = await _usuarioService.ObterPorId(usuarioId);
-            if (usuarioLogado == null || usuarioLogado.Role!= UserRole.Admin)
-            {
-                return Unauthorized("Voce não tem permissão para excluir usuarios");
-            }
+            //var usuarioId = User.GetId();
+            var usuarioLogado = await _usuarioService.ObterPorId(id);
+            //if (usuarioLogado == null || usuarioLogado.Role!= UserRole.Admin)
+            //{
+            //    return Unauthorized("Voce não tem permissão para excluir usuarios");
+            //}
 
             var usuarioExcluido = await _usuarioService.Excluir(id);
             if (usuarioExcluido == null)
@@ -226,7 +226,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpGet("ObterTodos")]
-        [Authorize]
+        //[Authorize]
         public async Task<ActionResult> GetAll([FromQuery] PaginationParams paginationParams)
         {
             var usuarios = await _usuarioService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);

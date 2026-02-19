@@ -31,7 +31,9 @@ namespace HealthIA.Domain.Entities
     private void Validacao(string nome, DateTime dataNascimento, string sexo, string telefone, int usuarioId)
     {
         DomainExceptionValidation.When(string.IsNullOrEmpty(nome), "Nome do paciente inválido.");
-        DomainExceptionValidation.When(dataNascimento > DateTime.Now, "Data de nascimento inválida.");
+
+        DomainExceptionValidation.When(dataNascimento.Date > DateTime.Now.Date, "Data de nascimento inválida.");
+
         DomainExceptionValidation.When(string.IsNullOrEmpty(sexo), "Sexo do paciente inválido.");
         DomainExceptionValidation.When(Id<0, "O id do usuario não pode ser negativo");
 

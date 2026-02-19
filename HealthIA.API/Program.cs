@@ -3,6 +3,9 @@ using HealthIA.Application.GeminiService;
 using HealthIA.Application.IGemini;
 using HealthIA.Infra.Ioc;
 
+// Configura Npgsql para não converter DateTime automaticamente para UTC
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
 var builder = WebApplication.CreateBuilder(args);
 
 var geminiApiKey = builder.Configuration["Gemini:ApiKey"];

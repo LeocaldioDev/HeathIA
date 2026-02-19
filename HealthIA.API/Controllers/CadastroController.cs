@@ -38,7 +38,7 @@ namespace HealthIA.API.Controllers
 
 
         [HttpPost("admin")]
-    [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult<UserToken>> CadastrarAdmin(
      [FromBody] CadastroAdminModel model)
         {
@@ -48,6 +48,7 @@ namespace HealthIA.API.Controllers
             var emailExiste = await _Authenticateservice.UserExists(model.Email);
             if (emailExiste)
                 return BadRequest("Este email já possui um cadastro.");
+
 
             // USUÁRIO
             var usuarioDto = new UsuarioregisterDTO
@@ -107,6 +108,8 @@ namespace HealthIA.API.Controllers
             var usuario = await _usuarioService.Incluir(usuarioS);
             if (usuario == null)
                 return BadRequest("Erro ao cadastrar usuário.");
+
+            
 
             var pacienteS = new PacienteDTO
             {

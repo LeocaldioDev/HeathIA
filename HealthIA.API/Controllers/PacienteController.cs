@@ -41,7 +41,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpDelete("Excluir/{id:int}")]
-        [Authorize(Roles = "Admin")]
+       // [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Excluir(int id)
         {
            var  paciente = await pacienteService.ObterPorId(id);
@@ -63,7 +63,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpGet("ObterTodos")]
-        [Authorize(Roles = "Medico,Admin")]
+       //[Authorize(Roles = "Medico,Admin")]
         public async Task<IActionResult> ObterTodos([FromQuery] PaginationParams paginationParams)
         {
             var pacientes = await pacienteService.ObterTodosAsync(paginationParams.PageNumber,paginationParams.PageSize);

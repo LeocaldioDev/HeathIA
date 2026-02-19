@@ -1,4 +1,5 @@
 ﻿using HealthIA.API.Errors;
+using HealthIA.Domain.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -54,6 +55,14 @@ namespace HealthIA.API.Middleware
                     HttpStatusCode.NotFound,
                     ex,
                     "Recurso não encontrado");
+            }
+            catch (DomainExceptionValidation ex)
+            {
+                await HandleExceptionAsync(
+                    context,
+                    HttpStatusCode.BadRequest,
+                    ex,
+                    ex.Message);
             }
             catch (Exception ex)
             {

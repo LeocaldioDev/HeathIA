@@ -31,7 +31,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpPut("Alterar")]
-        [Authorize(Roles = "Admin")]
+       [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Alterar(AdminDTO adminDTO)
         {
             var adminexiste = await admin.ObterPorId(adminDTO.Id);
@@ -54,7 +54,7 @@ namespace HealthIA.API.Controllers
         }
 
         [HttpGet("ObterPorId/{id:int}")]
-        [Authorize(Roles = "Admin")]
+      [Authorize(Roles = "Admin")]
         public async Task<IActionResult> ObterPorId(int id)
         {
             var admino = await admin.ObterPorId(id);

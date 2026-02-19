@@ -83,6 +83,11 @@ namespace HealthIA.Infra.Data.Identity
             return true;
         }
 
-       
+        public async Task<bool> AnyUserExists()
+        {
+            return await _context.Usuarios.AnyAsync();
+        }
+
+
     }
 }
