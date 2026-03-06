@@ -80,6 +80,7 @@ namespace HealthIA.Infra.Ioc
             services.AddScoped<IMedicoService, MedicoService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IAuthenticate, AuthenticateServices>();
+            services.AddScoped<ICadastroService, CadastroService>();
 
 
 

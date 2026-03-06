@@ -1,13 +1,8 @@
 ﻿using HealthIA.API.Models;
 using HealthIA.Application.DTOs;
 using HealthIA.Application.Interfaces;
-using HealthIA.Application.Services;
-using HealthIA.Domain.Account;
-using HealthIA.Domain.Entities;
-using HealthIA.Infra.Ioc;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace HealthIA.API.Controllers
 {
@@ -15,166 +10,48 @@ namespace HealthIA.API.Controllers
     [Route("api/[controller]")]
     public class CadastroController : ControllerBase
     {
+        private readonly ICadastroService _cadastroService;
 
-        private readonly IPacienteService _pacienteService;
-        private readonly IAdminService _adminService;
-        private readonly IMedicoService _medicoService;
-        private readonly IUsuarioService _usuarioService;
-        private readonly IAuthenticate _Authenticateservice;
-
-        public CadastroController(
-            IPacienteService pacienteService,
-            IAdminService adminService,
-            IMedicoService medicoService,
-            IUsuarioService usuarioService,
-            IAuthenticate authenticateService)
+        public CadastroController(ICadastroService cadastroService)
         {
-            this._pacienteService = pacienteService;
-            this._adminService = adminService;
-            this._medicoService = medicoService;
-            this._usuarioService = usuarioService;
-            this._Authenticateservice = authenticateService;
+            _cadastroService = cadastroService;
         }
-
 
         [HttpPost("admin")]
-        [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<UserToken>> CadastrarAdmin(
-     [FromBody] CadastroAdminModel model)
+        public async Task<ActionResult<UserToken>> CadastrarAdmin([FromBody] CadastroAdminDTO model)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            var resultado = await _cadastroService.RegistrarAdminAsync(model);
 
-            var emailExiste = await _Authenticateservice.UserExists(model.Email);
-            if (emailExiste)
-                return BadRequest("Este email já possui um cadastro.");
+            if (!resultado.Sucesso)
+                return BadRequest(resultado.Mensagem);
 
-
-            // USUÁRIO
-            var usuarioDto = new UsuarioregisterDTO
-            {
-                Email = model.Email,
-                Role = UserRole.Admin,
-                password = model.Password
-                
-            };
-
-            var usuario = await _usuarioService.Incluir(usuarioDto);
-            if (usuario == null)
-                return BadRequest("Erro ao cadastrar usuário.");
-
-            // ADMIN
-            var adminDto = new AdminDTO
-            {
-                Nome = model.Nome,
-                UsuarioId = usuario.Id
-            };
-
-            var admin = await _adminService.Incluir(adminDto);
-            if (admin == null)
-                return BadRequest("Erro ao cadastrar administrador.");
-
-            var token = _Authenticateservice.GenerateToken(
-                usuario.Id, usuario.Email, usuario.Role);
-
-            return Ok(new UserToken
-            {
-                Token = token
-            });
+            return Ok(new UserToken { Token = resultado.Token });
         }
-
-
-
-
 
         [HttpPost("paciente")]
-        public async Task<ActionResult<UserToken>> CadastrarPaciente(
-            [FromBody] cadastroPacienteModel user)
+        public async Task<ActionResult<UserToken>> CadastrarPaciente([FromBody] CadastroPacienteDTO model)
         {
-            
+            var resultado = await _cadastroService.RegistrarPacienteAsync(model);
 
-            var emailExiste = await _Authenticateservice.UserExists(user.Email);
-            if (emailExiste)
-                return BadRequest("Este email já possui cadastro.");
+            if (!resultado.Sucesso)
+                return BadRequest(resultado.Mensagem);
 
-            var usuarioS = new UsuarioregisterDTO
-            {
-                Email = user.Email,
-                Role = UserRole.Paciente,
-                password = user.Password
-                
-            };
-
-            var usuario = await _usuarioService.Incluir(usuarioS);
-            if (usuario == null)
-                return BadRequest("Erro ao cadastrar usuário.");
-
-            
-
-            var pacienteS = new PacienteDTO
-            {
-                Nome = user.Nome,
-                DataNascimento = user.DataNascimento,
-                Sexo = user.Sexo,
-                Telefone = user.Telefone,
-                UsuarioId = usuario.Id
-            };
-
-            await _pacienteService.Incluir(pacienteS);
-
-            var token = _Authenticateservice.GenerateToken(
-                usuario.Id, usuario.Email, usuario.Role);
-
-            return Ok(new UserToken { Token = token });
+            return Ok(new UserToken { Token = resultado.Token });
         }
-
-
 
         [HttpPost("medico")]
         [Authorize(Roles = "Admin")]
-        public async Task<ActionResult<UserToken>> CadastrarMedico(
-      [FromBody] CadastroMedicoModel model)
+        public async Task<ActionResult<UserToken>> CadastrarMedico([FromBody] CadastroMedicoDTO model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var emailExiste = await _Authenticateservice.UserExists(model.Email);
-            if (emailExiste)
-                return BadRequest("Este email já possui um cadastro.");
+            var resultado = await _cadastroService.RegistrarMedicoAsync(model);
 
-            
-            var usuarioDto = new UsuarioregisterDTO
-            {
-                Email = model.Email,
-                Role = UserRole.Medico,
-                password = model.Password
-            };
+            if (!resultado.Sucesso)
+                return BadRequest(resultado.Mensagem);
 
-            var usuario = await _usuarioService.Incluir(usuarioDto);
-            if (usuario == null)
-                return BadRequest("Erro ao cadastrar usuário.");
-
-            
-            var medicoDto = new MedicoDTO
-            {
-                Nome = model.Nome,
-                UsuarioId = usuario.Id
-            };
-
-            var medico = await _medicoService.Incluir(medicoDto);
-            if (medico == null)
-                return BadRequest("Erro ao cadastrar médico.");
-
-            var token = _Authenticateservice.GenerateToken(
-                usuario.Id, usuario.Email, usuario.Role);
-
-            return Ok(new UserToken
-            {
-                Token = token
-            });
+            return Ok(new UserToken { Token = resultado.Token });
         }
-
-
-
     }
 }
