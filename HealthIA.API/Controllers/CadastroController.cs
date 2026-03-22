@@ -17,7 +17,7 @@ namespace HealthIA.API.Controllers
             _cadastroService = cadastroService;
         }
 
-        [HttpPost("admin")]
+       [HttpPost("admin")]
         public async Task<ActionResult<UserToken>> CadastrarAdmin([FromBody] CadastroAdminDTO model)
         {
             var resultado = await _cadastroService.RegistrarAdminAsync(model);

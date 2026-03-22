@@ -3,6 +3,7 @@ using System.IO;
 
 namespace HealthIA.API.Controllers
 {
+    [ApiExplorerSettings(IgnoreApi = true)]
     public class FallbackController : Controller
     {
         public IActionResult Index()
